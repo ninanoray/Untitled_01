@@ -2,15 +2,15 @@
 
 ### Dev Team
 
-아울시스템즈 개발 2팀
+그때그팀 - 1
 
 ### Dev Duration
 
-2024-07-08 ~ 2024-10-30
+2024-11-10 ~
 
 ### Project Objectives
 
-키 서버에 대한 모니터링 및 장애 이슈 관리 툴
+Notion 클론 코딩
 
 # Getting Start
 
