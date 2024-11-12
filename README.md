@@ -17,7 +17,7 @@ Notion 클론 코딩
 ### Requirements
 
 - Node.js v20.15.0
-- npm 10.7.0
+- npm 10.9.0
 
 ### Start
 
