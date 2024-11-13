@@ -99,4 +99,27 @@
   body {
     @apply bg-background text-foreground;
   }
+  @layer base {
+    h1 {
+      @apply text-3xl font-bold text-gray-950;
+    }
+    h2 {
+      @apply text-2xl font-semibold text-gray-900;
+    }
+    h3 {
+      @apply text-xl font-medium text-gray-800;
+    }
+    h4 {
+      @apply text-lg font-normal text-gray-800;
+    }
+    p {
+      @apply text-base font-normal text-gray-800;
+    }
+    h5 {
+      @apply text-sm font-light text-gray-700;
+    }
+    h6 {
+      @apply text-xs font-light text-gray-600;
+    }
+  }
 }
