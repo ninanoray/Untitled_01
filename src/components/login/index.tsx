@@ -1,6 +1,6 @@
 "use client";
 
-import { Separator } from "../ui/separator";
+import { Separator } from "@/src/components/ui/separator";
 import LoginForm from "./loginForm";
 
 const Login = () => {

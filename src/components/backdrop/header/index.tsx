@@ -5,9 +5,9 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../../ui/breadcrumb";
-import { Separator } from "../../ui/separator";
-import { SidebarTrigger } from "../../ui/sidebar";
+} from "@/src/components/ui/breadcrumb";
+import { Separator } from "@/src/components/ui/separator";
+import { SidebarTrigger } from "@/src/components/ui/sidebar";
 
 interface Props {
   page: { links?: { title: string; url: string }[]; title: string };

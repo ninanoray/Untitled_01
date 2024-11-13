@@ -1,6 +1,15 @@
 "use client";
 
 import {
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/src/components/ui/sidebar";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -14,15 +23,6 @@ import {
   Trash2,
   type LucideIcon,
 } from "lucide-react";
-import {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuAction,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "../../../ui/sidebar";
 
 export function NavProjects({
   projects,

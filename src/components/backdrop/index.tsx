@@ -1,8 +1,8 @@
 "use client";
 
+import { SidebarInset, SidebarProvider } from "@/src/components/ui/sidebar";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
-import { SidebarInset, SidebarProvider } from "../ui/sidebar";
 import { AppSidebar } from "./sidebar/app-sidebar";
 
 interface Props {
