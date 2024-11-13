@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
-import Backdrop from "../components/backdrop";
+import BackdropProvider from "../components/backdrop";
 import "./globals.css";
 
 const notoSansKr = Noto_Sans_KR({
@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="ko">
       <body className={notoSansKr.className}>
         <div id="root">
-          <Backdrop>{children}</Backdrop>
+          <BackdropProvider>{children}</BackdropProvider>
         </div>
       </body>
     </html>

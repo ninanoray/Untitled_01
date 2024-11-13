@@ -22,7 +22,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "../../ui/sidebar";
+} from "../../../ui/sidebar";
 
 export function NavProjects({
   projects,

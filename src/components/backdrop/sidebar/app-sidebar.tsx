@@ -19,9 +19,9 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "../../ui/sidebar";
-import { NavMain } from "./nav-main";
-import { NavProjects } from "./nav-projects";
-import { NavUser } from "./nav-user";
+import { NavMain } from "./navMain/navMain";
+import { NavProjects } from "./navProjects";
+import { NavUser } from "./navUser";
 import { TeamSwitcher } from "./team-switcher";
 
 // This is sample data.

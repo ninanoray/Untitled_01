@@ -8,7 +8,7 @@ import { AppSidebar } from "./sidebar/app-sidebar";
 interface Props {
   children: ReactNode;
 }
-const Backdrop = ({ children }: Props) => {
+const BackdropProvider = ({ children }: Props) => {
   const currentPath = usePathname();
   if (!currentPath.includes("/login"))
     return (
@@ -20,4 +20,4 @@ const Backdrop = ({ children }: Props) => {
   else return <>{children}</>;
 };
 
-export default Backdrop;
+export default BackdropProvider;
