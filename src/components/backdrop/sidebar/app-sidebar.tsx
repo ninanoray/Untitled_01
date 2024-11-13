@@ -1,6 +1,12 @@
 "use client";
 
 import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+} from "@/src/components/ui/sidebar";
+import {
   AudioWaveform,
   BookOpen,
   Bot,
@@ -13,15 +19,9 @@ import {
   SquareTerminal,
 } from "lucide-react";
 import * as React from "react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-} from "../../ui/sidebar";
-import { NavMain } from "./nav-main";
-import { NavProjects } from "./nav-projects";
-import { NavUser } from "./nav-user";
+import { NavMain } from "./navMain/navMain";
+import { NavProjects } from "./navProjects";
+import { NavUser } from "./navUser";
 import { TeamSwitcher } from "./team-switcher";
 
 // This is sample data.

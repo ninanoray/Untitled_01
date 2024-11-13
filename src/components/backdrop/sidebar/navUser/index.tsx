@@ -1,14 +1,5 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,13 +8,22 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../../ui/dropdown-menu";
+} from "@/src/components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "../../ui/sidebar";
+} from "@/src/components/ui/sidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import {
+  BadgeCheck,
+  Bell,
+  ChevronsUpDown,
+  CreditCard,
+  Sparkles,
+} from "lucide-react";
+import ItemLogout from "./itemLogout";
 
 export function NavUser({
   user,
@@ -97,10 +97,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
+            <ItemLogout />
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
