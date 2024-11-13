@@ -1,5 +1,7 @@
+import Login from "@/src/components/login";
+
 const login = () => {
-  return <div>Login</div>;
+  return <Login />;
 };
 
 export default login;
