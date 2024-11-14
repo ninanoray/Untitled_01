@@ -34,11 +34,16 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ### Environment
 
-![environment](https://skillicons.dev/icons?i=vscode,git,github)
+![vscode](https://skillicons.dev/icons?i=vscode "vscode")
+![vscode](https://skillicons.dev/icons?i=git "git")
+![vscode](https://skillicons.dev/icons?i=github "github")
 
 ### Frameworks & libraries
 
-![frameworks and libraries](https://go-skill-icons.vercel.app/api/icons?i=nextjs,ts,reactquery,zustand)
+![nextjs](https://go-skill-icons.vercel.app/api/icons?i=nextjs "Next.js")
+![nextjs](https://go-skill-icons.vercel.app/api/icons?i=ts "Typescript")
+![nextjs](https://go-skill-icons.vercel.app/api/icons?i=reactquery "ReactQueary")
+![nextjs](https://go-skill-icons.vercel.app/api/icons?i=zustand "Zustand")
 
 ### UI
 
