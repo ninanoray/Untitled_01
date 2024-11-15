@@ -33,7 +33,7 @@ export function NavMain({
 }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>즐겨찾기</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible
@@ -43,13 +43,15 @@ export function NavMain({
             className="group/collapsible"
           >
             <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
-                  <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                </SidebarMenuButton>
-              </CollapsibleTrigger>
+              <SidebarMenuButton tooltip={item.title}>
+                <CollapsibleTrigger asChild>
+                  <ChevronRight className="transition-transform duration-200 hidden group-focus-within/menu-item:block group-hover/menu-item:block group-data-[state=open]/collapsible:rotate-90" />
+                </CollapsibleTrigger>
+                {item.icon && (
+                  <item.icon className="group-focus-within/menu-item:hidden group-hover/menu-item:hidden" />
+                )}
+                <span>{item.title}</span>
+              </SidebarMenuButton>
               <CollapsibleContent>
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (

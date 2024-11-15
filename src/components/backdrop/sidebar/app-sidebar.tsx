@@ -11,49 +11,43 @@ import {
   BookOpen,
   Bot,
   Command,
-  Frame,
   GalleryVerticalEnd,
   Map,
-  PieChart,
-  Settings2,
   SquareTerminal,
 } from "lucide-react";
 import * as React from "react";
-import { NavMain } from "./navMain/navMain";
-import { NavProjects } from "./navProjects";
+import { NavPages } from "./navPages";
 import { NavUser } from "./navUser";
-import { TeamSwitcher } from "./team-switcher";
+import { WorkspaceSwitcher } from "./workspaceSwitcher";
 
-// This is sample data.
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "무제",
+    email: "untitled_01@gmail.com",
     avatar: "https://github.com/shadcn.png",
   },
-  teams: [
+  workspaces: [
     {
-      name: "Acme Inc",
+      name: "워크스페이스 1",
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      plan: "개인",
     },
     {
-      name: "Acme Corp.",
+      name: "워크스페이스 2",
       logo: AudioWaveform,
-      plan: "Startup",
+      plan: "회사",
     },
     {
-      name: "Evil Corp.",
+      name: "워크스페이스 3",
       logo: Command,
-      plan: "Free",
+      plan: "친구",
     },
   ],
-  navMain: [
+  stared: [
     {
       title: "Playground",
       url: "#",
       icon: SquareTerminal,
-      isActive: true,
       items: [
         {
           title: "History",
@@ -63,8 +57,21 @@ const data = {
           title: "Starred",
           url: "#",
         },
+      ],
+    },
+  ],
+  pages: [
+    {
+      title: "Playground",
+      url: "#",
+      icon: SquareTerminal,
+      items: [
         {
-          title: "Settings",
+          title: "History",
+          url: "#",
+        },
+        {
+          title: "Starred",
           url: "#",
         },
       ],
@@ -112,44 +119,19 @@ const data = {
       ],
     },
     {
-      title: "Settings",
+      title: "Travel",
       url: "#",
-      icon: Settings2,
+      icon: Map,
       items: [
         {
-          title: "General",
+          title: "Seoul",
           url: "#",
         },
         {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
+          title: "Busan",
           url: "#",
         },
       ],
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
     },
   ],
 };
@@ -158,11 +140,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <WorkspaceSwitcher teams={data.workspaces} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavPages label="즐겨찾기" pages={data.stared} />
+        <NavPages label="페이지" pages={data.pages} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

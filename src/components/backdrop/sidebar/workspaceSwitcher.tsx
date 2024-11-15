@@ -18,7 +18,7 @@ import {
 import { ChevronsUpDown, Plus } from "lucide-react";
 import * as React from "react";
 
-export function TeamSwitcher({
+export function WorkspaceSwitcher({
   teams,
 }: {
   teams: {
@@ -58,7 +58,7 @@ export function TeamSwitcher({
             sideOffset={4}
           >
             <DropdownMenuLabel className="text-xs text-muted-foreground">
-              Teams
+              워크스페이스
             </DropdownMenuLabel>
             {teams.map((team, index) => (
               <DropdownMenuItem
@@ -78,7 +78,9 @@ export function TeamSwitcher({
               <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                 <Plus className="size-4" />
               </div>
-              <div className="font-medium text-muted-foreground">Add team</div>
+              <div className="font-medium text-muted-foreground">
+                새 워크스페이스
+              </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
