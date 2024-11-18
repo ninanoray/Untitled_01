@@ -66,7 +66,7 @@ const SignupForm = () => {
               <FormItem>
                 <FormLabel>비밀번호 설정</FormLabel>
                 <FormControl>
-                  <Input placeholder="비밀번호" {...field} />
+                  <Input type="password" placeholder="비밀번호" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

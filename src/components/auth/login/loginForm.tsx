@@ -135,7 +135,11 @@ const LoginForm = () => {
                 <FormItem>
                   <FormLabel>비밀번호</FormLabel>
                   <FormControl>
-                    <Input placeholder="비밀번호를 입력하세요" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="비밀번호를 입력하세요"
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription className="cursor-pointer">
                     비밀번호를 잊어버리셨나요?
@@ -178,12 +182,14 @@ const LoginForm = () => {
                       </InputOTPGroup>
                     </InputOTP>
                   </FormControl>
-                  <FormDescription className="flex gap-2">
-                    수신함으로 인증번호를 보내드렸습니다.
+                  <div className="flex gap-1">
+                    <FormDescription>
+                      수신함으로 인증번호를 보내드렸습니다.
+                    </FormDescription>
                     {pinCount > 0 ? (
-                      <p className="text-sm text-gray-500">{`${pinCount}초 후에 다시 보내기.`}</p>
+                      <div className="text-sm text-gray-500">{` ${pinCount}초 후에 다시 보내기.`}</div>
                     ) : (
-                      <p
+                      <div
                         className="text-sm text-blue-600 cursor-pointer"
                         onClick={() => {
                           setPinCount(30);
@@ -191,9 +197,9 @@ const LoginForm = () => {
                         }}
                       >
                         다시 보내기
-                      </p>
+                      </div>
                     )}
-                  </FormDescription>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}

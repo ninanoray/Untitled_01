@@ -44,12 +44,13 @@ const InputImage = ({ control, preview, setPreview }: Props) => {
       name="image"
       render={({ field: { onChange, value, ...rest } }) => (
         <FormItem className="mt-10 mb-8 flex-center flex-col">
-          <FormLabel className="flex-center flex-col gap-4 cursor-pointer">
+          <FormLabel className="cursor-pointer rounded-full">
             <Avatar className="size-32">
               <AvatarImage src={preview} />
-              <AvatarFallback>기본</AvatarFallback>
+              <AvatarFallback className="text-gray-500 hover:text-black trans-200">
+                사진 추가
+              </AvatarFallback>
             </Avatar>
-            <p className="text-gray-400 text-xl">사진 추가</p>
           </FormLabel>
           <FormControl>
             <Input

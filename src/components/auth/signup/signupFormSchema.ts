@@ -11,8 +11,11 @@ export const signupFormSchema = z.object({
   image: z
     .any()
     .refine(
+      (file: File) => file?.type.includes("image/"),
+      "이미지 파일만 가능합니다."
+    )
+    .refine(
       (file) => file?.size <= IMAGE_SIZE * 1000 * 1000,
       `이미지 최대 사이즈는 ${IMAGE_SIZE}MB 입니다.`
-    )
-    .refine((file: File) => file?.type.includes("image/")),
+    ),
 });
