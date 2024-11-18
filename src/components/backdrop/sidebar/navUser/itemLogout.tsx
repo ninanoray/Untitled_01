@@ -6,7 +6,7 @@ const ItemLogout = () => {
   const router = useRouter();
 
   return (
-    <DropdownMenuItem onClick={() => router.push("/login")}>
+    <DropdownMenuItem onClick={() => router.push("/auth/login")}>
       <LogOut />
       Log out
     </DropdownMenuItem>
