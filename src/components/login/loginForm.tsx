@@ -2,7 +2,7 @@ import { Button } from "@/src/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -28,6 +28,7 @@ const CHECK_PIN = 2;
 
 const LoginForm = () => {
   const [loginMode, setLoginMode] = useState<number>(CHECK_EMAIL);
+  const [pinCount, setPinCount] = useState<number>(30);
 
   const router = useRouter();
 
@@ -67,6 +68,18 @@ const LoginForm = () => {
     console.log(values);
     router.push("/");
   }
+
+  useEffect(() => {
+    if (loginMode === CHECK_PIN) {
+      const id = setInterval(() => {
+        setPinCount((count) => count - 1);
+      }, 1000);
+      if (pinCount <= 0) {
+        clearInterval(id);
+      }
+      return () => clearInterval(id);
+    }
+  }, [loginMode, pinCount]);
 
   return (
     <>
@@ -124,7 +137,9 @@ const LoginForm = () => {
                   <FormControl>
                     <Input placeholder="비밀번호를 입력하세요" {...field} />
                   </FormControl>
-                  <FormDescription>비밀번호를 잊어버리셨나요?</FormDescription>
+                  <FormDescription className="cursor-pointer">
+                    비밀번호를 잊어버리셨나요?
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -165,7 +180,16 @@ const LoginForm = () => {
                   </FormControl>
                   <FormDescription className="flex gap-2">
                     수신함으로 인증번호를 보내드렸습니다.
-                    <p className="text-blue-600 cursor-pointer">다시 보내기</p>
+                    {pinCount > 0 ? (
+                      <p className="text-sm text-gray-500">{`${pinCount}초 후에 다시 보내기.`}</p>
+                    ) : (
+                      <p
+                        className="text-sm text-blue-600 cursor-pointer"
+                        onClick={() => setPinCount(30)}
+                      >
+                        다시 보내기
+                      </p>
+                    )}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
