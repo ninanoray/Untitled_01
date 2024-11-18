@@ -9,7 +9,6 @@ import {
 import {
   AudioWaveform,
   BookOpen,
-  Bot,
   Command,
   GalleryVerticalEnd,
   Map,
@@ -18,7 +17,7 @@ import {
 import * as React from "react";
 import { NavPages } from "./navPages";
 import { NavUser } from "./navUser";
-import { WorkspaceSwitcher } from "./workspaceSwitcher";
+import { NavWorkSpace } from "./navWorkspace";
 
 const data = {
   user: {
@@ -77,25 +76,6 @@ const data = {
       ],
     },
     {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
       title: "Documentation",
       url: "#",
       icon: BookOpen,
@@ -110,10 +90,6 @@ const data = {
         },
         {
           title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
           url: "#",
         },
       ],
@@ -140,7 +116,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <WorkspaceSwitcher teams={data.workspaces} />
+        <NavWorkSpace workspaces={data.workspaces} />
       </SidebarHeader>
       <SidebarContent>
         <NavPages label="즐겨찾기" pages={data.stared} />

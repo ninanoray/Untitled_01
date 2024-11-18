@@ -64,16 +64,10 @@ export function NavPages({ label, pages, hideIcon = false }: Props) {
                   <a href={item.url}>{item.title}</a>
                 </div>
               </SidebarMenuButton>
-              <CollapsibleTrigger asChild>
-                <SidebarMenuAction showOnHover>
-                  <ChevronRight className="mr-10 transition-transform duration-200 cursor-pointer group-data-[state=open]/collapsible:rotate-90" />
-                </SidebarMenuAction>
-              </CollapsibleTrigger>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuAction showOnHover>
-                    <MoreHorizontal />
-                    <span className="sr-only">More</span>
+                    <MoreHorizontal className="mr-12" />
                   </SidebarMenuAction>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -96,6 +90,11 @@ export function NavPages({ label, pages, hideIcon = false }: Props) {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              <CollapsibleTrigger asChild>
+                <SidebarMenuAction showOnHover>
+                  <ChevronRight className="transition-transform duration-200 cursor-pointer group-data-[state=open]/collapsible:rotate-90" />
+                </SidebarMenuAction>
+              </CollapsibleTrigger>
               <CollapsibleContent>
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
