@@ -18,3 +18,7 @@ export const loginFormSchema = z.object({
   //   .email("유효하지 않은 이메일입니다."),
   password: z.string().min(1, { message: "비밀번호를 입력해주세요." }),
 });
+
+export const pinFormSchema = z.object({
+  pin: z.string().min(6, { message: "인증코드 6자리를 입력해주세요." }),
+});
