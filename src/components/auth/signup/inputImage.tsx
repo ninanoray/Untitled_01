@@ -15,7 +15,7 @@ type Props = {
     | Control<{
         name: string;
         password: string;
-        image?: any;
+        image?: File;
       }>
     | undefined;
   preview: string;

@@ -31,7 +31,7 @@ const SignupForm = () => {
 
   function onSubmit(values: z.infer<typeof signupFormSchema>) {
     console.log(values);
-    router.push("/");
+    // router.push("/");
   }
 
   return (
