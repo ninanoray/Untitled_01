@@ -13,9 +13,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp";
+} from "../../ui/form";
+import { Input } from "../../ui/input";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "../../ui/input-otp";
 import {
   emailFormSchema,
   loginFormSchema,
@@ -66,7 +66,7 @@ const LoginForm = () => {
 
   function onSubmitPin(values: z.infer<typeof pinFormSchema>) {
     console.log(values);
-    router.push("/");
+    router.push("/auth/signup");
   }
 
   useEffect(() => {
@@ -168,7 +168,7 @@ const LoginForm = () => {
                       pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
                       {...field}
                     >
-                      <InputOTPGroup>
+                      <InputOTPGroup className="uppercase">
                         <InputOTPSlot index={0} />
                         <InputOTPSlot index={1} />
                         <InputOTPSlot index={2} />
@@ -185,7 +185,10 @@ const LoginForm = () => {
                     ) : (
                       <p
                         className="text-sm text-blue-600 cursor-pointer"
-                        onClick={() => setPinCount(30)}
+                        onClick={() => {
+                          setPinCount(30);
+                          formPin.resetField("pin");
+                        }}
                       >
                         다시 보내기
                       </p>

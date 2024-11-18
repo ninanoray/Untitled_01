@@ -2,7 +2,7 @@
 
 import { GoogleSVG } from "@/src/app/svg";
 import { Separator } from "@/src/components/ui/separator";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import LoginForm from "./loginForm";
 
 const Login = () => {

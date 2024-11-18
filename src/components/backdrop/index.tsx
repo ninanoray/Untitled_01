@@ -10,7 +10,7 @@ interface Props {
 }
 const BackdropProvider = ({ children }: Props) => {
   const currentPath = usePathname();
-  if (!currentPath.includes("/login"))
+  if (!currentPath.includes("/auth"))
     return (
       <SidebarProvider>
         <AppSidebar />
