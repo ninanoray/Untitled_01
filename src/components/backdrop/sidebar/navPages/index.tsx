@@ -32,6 +32,7 @@ import {
   Trash2,
   type LucideIcon,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   label: string;
@@ -50,6 +51,8 @@ type Props = {
 export function NavPages({ label, pages, hideIcon = false }: Props) {
   const { isMobile } = useSidebar();
 
+  const router = useRouter();
+
   const hideCollapsibleIcon = "group-data-[collapsible=icon]:hidden";
   return (
     <SidebarGroup className={hideIcon ? hideCollapsibleIcon : ""}>
@@ -59,9 +62,12 @@ export function NavPages({ label, pages, hideIcon = false }: Props) {
           <Collapsible key={item.title} asChild className="group/collapsible">
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
-                <div>
-                  <item.icon className="cursor-pointer" />
-                  <a href={item.url}>{item.title}</a>
+                <div
+                  onClick={() => router.push(item.url)}
+                  className="cursor-pointer"
+                >
+                  <item.icon />
+                  {item.title}
                 </div>
               </SidebarMenuButton>
               <DropdownMenu>

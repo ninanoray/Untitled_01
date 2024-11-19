@@ -7,6 +7,7 @@ import {
 } from "@/src/components/ui/dropdown-menu";
 import { useSidebar } from "@/src/components/ui/sidebar";
 import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 import { Workspace } from ".";
 
@@ -17,6 +18,8 @@ type Props = {
 
 const DropdownWorkspaceContent = ({ workspaces, handleClick }: Props) => {
   const { isMobile } = useSidebar();
+
+  const router = useRouter();
 
   return (
     <DropdownMenuContent
@@ -31,8 +34,11 @@ const DropdownWorkspaceContent = ({ workspaces, handleClick }: Props) => {
       {workspaces.map((workspace, index) => (
         <DropdownMenuItem
           key={workspace.name}
-          onClick={() => handleClick(workspace)}
-          className="gap-2 p-2"
+          onClick={() => {
+            handleClick(workspace);
+            router.push("/");
+          }}
+          className="gap-2 p-2 cursor-pointer"
         >
           <div className="flex size-6 items-center justify-center rounded-sm border">
             <workspace.logo className="size-4 shrink-0" />
@@ -43,7 +49,7 @@ const DropdownWorkspaceContent = ({ workspaces, handleClick }: Props) => {
       ))}
       <DropdownMenuSeparator />
       <DropdownMenuItem className="gap-2 p-2">
-        <div className="flex size-6 items-center justify-center rounded-md border bg-background">
+        <div className="flex size-6 items-center justify-center rounded-md border bg-background cursor-pointer">
           <Plus className="size-4" />
         </div>
         <div className="font-medium text-muted-foreground">새 워크스페이스</div>
