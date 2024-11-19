@@ -1,7 +1,6 @@
 import {
   DropdownMenuContent,
   DropdownMenuGroup,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/src/components/ui/dropdown-menu";
@@ -12,9 +11,9 @@ import {
   AvatarImage,
 } from "@/src/components/ui/avatar";
 import { useSidebar } from "@/src/components/ui/sidebar";
-import { BadgeCheck, Bell, CreditCard, Sparkles } from "lucide-react";
+import { Bell, LogOut, Settings, UserRound } from "lucide-react";
 import { User } from ".";
-import ItemLogout from "./itemLogout";
+import UserMenuItem from "./userMenuItem";
 
 type Props = {
   user: User;
@@ -51,28 +50,12 @@ const DropdownUserContent = ({ user }: Props) => {
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
-        <DropdownMenuItem>
-          <Sparkles />
-          Upgrade to Pro
-        </DropdownMenuItem>
+        <UserMenuItem title="알림" Icon={Bell} />
+        <UserMenuItem title="멤버 초대" Icon={UserRound} />
+        <UserMenuItem title="설정" Icon={Settings} />
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
-      <DropdownMenuGroup>
-        <DropdownMenuItem>
-          <BadgeCheck />
-          Account
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <CreditCard />
-          Billing
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Bell />
-          Notifications
-        </DropdownMenuItem>
-      </DropdownMenuGroup>
-      <DropdownMenuSeparator />
-      <ItemLogout />
+      <UserMenuItem title="로그아웃" Icon={LogOut} link="/auth/login" />
     </DropdownMenuContent>
   );
 };
