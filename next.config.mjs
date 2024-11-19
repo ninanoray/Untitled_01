@@ -7,22 +7,20 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "http",
-        hostname: "localhost",
-        pathname: "/images/**",
+        hostname: "**",
       },
       {
         protocol: "https",
-        hostname: "github.com",
+        hostname: "**",
       },
     ],
   },
-  transpilePackages: ["@mdxeditor/editor"],
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/,
       use: ["@svgr/webpack"],
     });
-    config.experiments = { ...config.experiments, topLevelAwait: true };
 
     return config;
   },
