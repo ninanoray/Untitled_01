@@ -13,7 +13,11 @@ const Mutable = <T extends ElementType = "div">({
   ...props
 }: MutableElementProps<T>) => {
   const Component = as || "div";
-  return <Component {...props}>{children}</Component>;
+  return (
+    <Component contentEditable {...props}>
+      {children}
+    </Component>
+  );
 };
 
 export default Mutable;

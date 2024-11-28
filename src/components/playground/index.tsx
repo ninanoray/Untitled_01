@@ -45,7 +45,34 @@ const Playground = () => {
         onChange={(e) => setContent(e.target.value)}
         placeholder="글을 작성하거나 명령어를 사용하려면 '/' 키를 누르세요"
       />
-      <Mutable as="button">{"안"}</Mutable>
+      <Mutable as="h1">
+        Lorem Ipsum is simply dummy text of the printing and typesetting
+        industry.
+      </Mutable>
+      <Mutable as="h2">
+        Lorem Ipsum is simply dummy text of the printing and typesetting
+        industry.
+      </Mutable>
+      <Mutable as="h3">
+        Lorem Ipsum is simply dummy text of the printing and typesetting
+        industry.
+      </Mutable>
+      <Mutable as="ul">
+        <li>
+          Lorem Ipsum is simply dummy text of the printing and typesetting
+          industry.
+        </li>
+      </Mutable>
+      <Mutable as="ol">
+        <li>
+          Lorem Ipsum is simply dummy text of the printing and typesetting
+          industry.
+        </li>
+      </Mutable>
+      <Mutable as="blockquote">
+        Lorem Ipsum is simply dummy text of the printing and typesetting
+        industry.
+      </Mutable>
     </div>
   );
 };
