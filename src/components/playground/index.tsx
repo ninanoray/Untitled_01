@@ -40,12 +40,12 @@ const Playground = () => {
         innerRef={contentEditableRef}
         onChange={onChangeContents}
       />
-      <Mutable as="button">{"안"}</Mutable>
       <Textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="글을 작성하거나 명령어를 사용하려면 '/' 키를 누르세요"
       />
+      <Mutable as="button">{"안"}</Mutable>
     </div>
   );
 };
