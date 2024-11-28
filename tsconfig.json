@@ -32,6 +32,7 @@
     "next-env.d.ts",
     "svgr.d.ts",
     "src/**/*.ts",
+    "lib/**/*.ts",
     "src/**/*.tsx",
     ".next/types/**/*.ts"
   ],
