@@ -96,21 +96,22 @@
   * {
     @apply border-border;
   }
-  *[contenteditable="true"] {
-    @apply cursor-text focus:border-none focus:outline-none active:border-none active:outline-none;
+  *[contenteditable] {
+    @apply inline-block cursor-text focus:outline-none empty:after:content-[attr(placeholder)] empty:block empty:text-gray-300;
   }
-  *[contenteditable="true"] > ul {
+  *[contenteditable] > ul {
     @apply list-disc list-inside;
   }
-  *[contenteditable="true"] > ol {
+  *[contenteditable] > ol {
     @apply list-decimal list-inside;
   }
+  code {
+    @apply px-2 py-1 my-2 bg-stone-100 text-red-500 rounded-lg;
+  }
   blockquote {
-    @apply px-6 py-4 my-4 bg-gray-50 border-l-4 border-gray-300 text-xl font-medium;
+    @apply px-6 py-3 my-4 bg-gray-50 border-l-4 border-gray-300 text-lg font-medium;
   }
-  *[contenteditable="true"]:empty:before {
-    @apply content-[attr(placeholder)] block text-gray-300 italic;
-  }
+
   body {
     @apply bg-background text-foreground;
   }
