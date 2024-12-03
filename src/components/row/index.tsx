@@ -21,36 +21,36 @@ const Row = ({ innerHtml, setInnerHtml }: Props) => {
     (event: ContentEditableEvent) => {
       const regex = /<[^>]*>?/g; // html 태그 정규식
 
-      const value = event.target.value;
-      const htmlTag = value
+      const innerHtmlvalue = event.target.value;
+      const type = innerHtmlvalue
         .match(regex)
         ?.at(0)
         ?.replace("<", "")
         .replace(">", "")
         .split(" ")[0];
-
-      const content = value.replace(/<[^>]*>?/g, "").replace("|", ">");
-      const htmlString = marked(content);
-
+      const content = innerHtmlvalue.replace(/<[^>]*>?/g, "").replace("|", ">");
       const cursor = document.getSelection();
       const offset = cursor?.anchorOffset;
 
       console.log({
-        value: value,
-        html: htmlString,
-        tag: htmlTag,
+        innerHtml: innerHtmlvalue,
+        type: type,
         content: content,
         offset: offset,
       });
-      if (!htmlTag) {
-        if (typeof htmlString === "string")
-          setInnerHtml(addHTMLAttributes(htmlString));
-        // else htmlString.then((res) => setInnerHtml(addHTMLAttributes(res)));
-      } else if (htmlTag.includes("br")) {
-        setInnerHtml(undefined);
-      } else if (htmlTag.includes("div")) {
-        setInnerHtml(undefined);
-      }
+
+      if (
+        content.includes(" ") ||
+        content.includes("```") ||
+        content.includes("---")
+      ) {
+        const parsedHtml = marked(content, { async: false });
+        console.log(parsedHtml);
+        if (!type) setInnerHtml(addHTMLAttributes(parsedHtml));
+        else if (type.includes("br") || type.includes("div")) {
+          setInnerHtml(undefined);
+        }
+      } else if (!content) setInnerHtml(undefined);
     },
     [setInnerHtml]
   );

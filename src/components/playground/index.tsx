@@ -7,10 +7,10 @@ import { Textarea } from "../ui/textarea";
 import { Titlearea } from "../ui/titlearea";
 
 const Playground = () => {
-  const [textAreaValue, setTextAreaValue] = useState<string>();
-  const result = marked(textAreaValue || "");
-
   const [html, setHtml] = useState<string>();
+
+  const [textAreaValue, setTextAreaValue] = useState<string>();
+  const result = marked(textAreaValue || "", { async: false });
 
   const parseMarkdown = (markdown: string | undefined) => {
     const regex = /<[^>]*>?/g; // html 태그 정규식
@@ -47,7 +47,7 @@ const Playground = () => {
       {result}
       <div
         contentEditable
-        dangerouslySetInnerHTML={{ __html: result as string }}
+        dangerouslySetInnerHTML={{ __html: result }}
         className="w-full"
       />
       <Textarea
@@ -56,7 +56,6 @@ const Playground = () => {
           const value = e.target.value;
           console.log({ value: value });
           setTextAreaValue(value);
-          // setHtml(marked(value) as string);
         }}
         placeholder="글을 작성하거나 명령어를 사용하려면 '/' 키를 누르세요"
       />
