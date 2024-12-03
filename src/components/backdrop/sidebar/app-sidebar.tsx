@@ -9,7 +9,6 @@ import {
 import {
   AudioWaveform,
   BookOpen,
-  Bot,
   Command,
   GalleryVerticalEnd,
   Map,
@@ -18,7 +17,7 @@ import {
 import * as React from "react";
 import { NavPages } from "./navPages";
 import { NavUser } from "./navUser";
-import { WorkspaceSwitcher } from "./workspaceSwitcher";
+import { NavWorkSpace } from "./navWorkspace";
 
 const data = {
   user: {
@@ -43,19 +42,15 @@ const data = {
       plan: "친구",
     },
   ],
-  stared: [
+  starred: [
     {
       title: "Playground",
-      url: "#",
+      url: "/playground",
       icon: SquareTerminal,
       items: [
         {
           title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
+          url: "/playground/history",
         },
       ],
     },
@@ -63,73 +58,46 @@ const data = {
   pages: [
     {
       title: "Playground",
-      url: "#",
+      url: "/playground",
       icon: SquareTerminal,
       items: [
         {
           title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
+          url: "/playground/history",
         },
       ],
     },
     {
       title: "Documentation",
-      url: "#",
+      url: "/documentation",
       icon: BookOpen,
       items: [
         {
           title: "Introduction",
-          url: "#",
+          url: "/documentation/introduction",
         },
         {
           title: "Get Started",
-          url: "#",
+          url: "/documentation/getStarted",
         },
         {
           title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
+          url: "/documentation/tutorials",
         },
       ],
     },
     {
       title: "Travel",
-      url: "#",
+      url: "/travel",
       icon: Map,
       items: [
         {
           title: "Seoul",
-          url: "#",
+          url: "/travel/seoul",
         },
         {
           title: "Busan",
-          url: "#",
+          url: "/travel/busan",
         },
       ],
     },
@@ -138,12 +106,12 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props} className="select-none">
       <SidebarHeader>
-        <WorkspaceSwitcher teams={data.workspaces} />
+        <NavWorkSpace workspaces={data.workspaces} />
       </SidebarHeader>
       <SidebarContent>
-        <NavPages label="즐겨찾기" pages={data.stared} />
+        <NavPages label="즐겨찾기" pages={data.starred} />
         <NavPages label="페이지" pages={data.pages} />
       </SidebarContent>
       <SidebarFooter>

@@ -32,6 +32,7 @@ import {
   Trash2,
   type LucideIcon,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   label: string;
@@ -50,6 +51,8 @@ type Props = {
 export function NavPages({ label, pages, hideIcon = false }: Props) {
   const { isMobile } = useSidebar();
 
+  const router = useRouter();
+
   const hideCollapsibleIcon = "group-data-[collapsible=icon]:hidden";
   return (
     <SidebarGroup className={hideIcon ? hideCollapsibleIcon : ""}>
@@ -59,21 +62,18 @@ export function NavPages({ label, pages, hideIcon = false }: Props) {
           <Collapsible key={item.title} asChild className="group/collapsible">
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
-                <div>
-                  <item.icon className="cursor-pointer" />
-                  <a href={item.url}>{item.title}</a>
+                <div
+                  onClick={() => router.push(item.url)}
+                  className="cursor-pointer"
+                >
+                  <item.icon />
+                  {item.title}
                 </div>
               </SidebarMenuButton>
-              <CollapsibleTrigger asChild>
-                <SidebarMenuAction showOnHover>
-                  <ChevronRight className="mr-10 transition-transform duration-200 cursor-pointer group-data-[state=open]/collapsible:rotate-90" />
-                </SidebarMenuAction>
-              </CollapsibleTrigger>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuAction showOnHover>
-                    <MoreHorizontal />
-                    <span className="sr-only">More</span>
+                    <MoreHorizontal className="mr-12" />
                   </SidebarMenuAction>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -96,6 +96,11 @@ export function NavPages({ label, pages, hideIcon = false }: Props) {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              <CollapsibleTrigger asChild>
+                <SidebarMenuAction showOnHover>
+                  <ChevronRight className="transition-transform duration-200 cursor-pointer group-data-[state=open]/collapsible:rotate-90" />
+                </SidebarMenuAction>
+              </CollapsibleTrigger>
               <CollapsibleContent>
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (

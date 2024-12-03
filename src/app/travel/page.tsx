@@ -1,16 +1,19 @@
 import Header from "@/src/components/backdrop/header";
 
 const breadcrumbs = {
-  title: "Home",
+  title: "Travel",
+  links: [{ title: "Home", url: "/" }],
 };
 
-export default function Home() {
+const travel = () => {
   return (
     <>
       <Header page={breadcrumbs} />
       <div className="flex flex-1 flex-col gap-4 p-2 pt-1">
-        <div>home</div>
+        <div>travel</div>
       </div>
     </>
   );
-}
+};
+
+export default travel;

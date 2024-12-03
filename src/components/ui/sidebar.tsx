@@ -15,7 +15,7 @@ import { PanelLeft } from "lucide-react";
 import * as React from "react";
 import { Button } from "./button";
 import { Input } from "./input";
-import { Sheet, SheetContent } from "./sheet";
+import { Sheet, SheetContent, SheetDescription, SheetTitle } from "./sheet";
 import { Skeleton } from "./skeleton";
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
@@ -194,6 +194,8 @@ const Sidebar = React.forwardRef<
     if (isMobile) {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+          <SheetTitle className="hidden">Sidebar</SheetTitle>
+          <SheetDescription className="hidden">Sidebar Menu</SheetDescription>
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"

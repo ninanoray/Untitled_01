@@ -96,30 +96,44 @@
   * {
     @apply border-border;
   }
+  *[contenteditable] {
+    @apply inline-block cursor-text focus:outline-none empty:after:content-[attr(placeholder)] empty:block empty:text-gray-300;
+  }
+  *[contenteditable] > ul {
+    @apply list-disc list-inside;
+  }
+  *[contenteditable] > ol {
+    @apply list-decimal list-inside;
+  }
+  code {
+    @apply px-2 py-1 my-2 bg-stone-100 text-red-500 rounded-lg;
+  }
+  blockquote {
+    @apply px-6 py-3 my-4 bg-gray-50 border-l-4 border-gray-300 text-lg font-medium;
+  }
+
   body {
     @apply bg-background text-foreground;
   }
-  @layer base {
-    h1 {
-      @apply text-3xl font-bold text-gray-950;
-    }
-    h2 {
-      @apply text-2xl font-semibold text-gray-900;
-    }
-    h3 {
-      @apply text-xl font-medium text-gray-800;
-    }
-    h4 {
-      @apply text-lg font-normal text-gray-800;
-    }
-    p {
-      @apply text-base font-normal text-gray-800;
-    }
-    h5 {
-      @apply text-sm font-light text-gray-700;
-    }
-    h6 {
-      @apply text-xs font-light text-gray-600;
-    }
+  h1 {
+    @apply text-3xl font-bold text-gray-950;
+  }
+  h2 {
+    @apply text-2xl font-semibold text-gray-900;
+  }
+  h3 {
+    @apply text-xl font-medium text-gray-800;
+  }
+  h4 {
+    @apply text-lg font-normal text-gray-800;
+  }
+  p {
+    @apply text-base font-normal text-gray-800;
+  }
+  h5 {
+    @apply text-sm font-light text-gray-700;
+  }
+  h6 {
+    @apply text-xs font-light text-gray-600;
   }
 }

@@ -7,15 +7,15 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "http",
-        hostname: "localhost",
-        pathname: "/images/**",
+        hostname: "**",
       },
       {
         protocol: "https",
-        hostname: "github.com",
+        hostname: "**",
       },
     ],
   },
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/,
