@@ -55,9 +55,10 @@ const Row = ({ innerHtml, setInnerHtml }: Props) => {
     [setInnerHtml]
   );
 
-  const placeholderStyle = "content-[attr(placeholder)]";
+  const placeholderStyle = "w-fit content-[attr(placeholder)]";
   const ulStyle = "[&_ul]:list-disc";
-  const olStyle = "[&_ol]:list-decimal";
+  const olStyle = "[&_ol]:list-decimal ";
+  const liStyle = "[&_li]:my-2 [&_li]:ml-6";
   const codeStyle =
     "[&_code]:px-2 [&_code]:py-1 [&_code]:my-2 [&_code]:bg-stone-100 [&_code]:text-red-500 [&_code]:rounded-lg";
   const blockquoteStyle =
@@ -71,7 +72,7 @@ const Row = ({ innerHtml, setInnerHtml }: Props) => {
         onChange={onChangeContents}
         className={
           innerHtml
-            ? twMerge(ulStyle, olStyle, codeStyle, blockquoteStyle)
+            ? twMerge(ulStyle, olStyle, liStyle, codeStyle, blockquoteStyle)
             : placeholderStyle
         }
       />
