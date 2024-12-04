@@ -1,5 +1,5 @@
 import { marked } from "marked";
-import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useRef } from "react";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import { twMerge } from "tailwind-merge";
 
@@ -9,8 +9,6 @@ type Props = {
 };
 
 const Row = ({ innerHtml, setInnerHtml }: Props) => {
-  const [hasContent, setHasContent] = useState<boolean>(false);
-
   const contentEditableRef = useRef<HTMLElement>(null);
 
   const addHTMLAttributes = (html: string) => {
@@ -70,20 +68,19 @@ const Row = ({ innerHtml, setInnerHtml }: Props) => {
         console.log(parsedHtml);
         if (
           (getHTMLtagName(parsedHtml) !== "p" && /&nbsp;$/.test(content)) ||
-          content.includes("```") ||
-          content.includes("---")
+          content.includes("```")
         ) {
           setInnerHtml(addHTMLAttributes(parsedHtml));
-          setHasContent(!!content);
-        }
+        } else if (content.includes("---")) setInnerHtml(parsedHtml);
       } else if (type.includes("div")) {
         setInnerHtml(undefined);
       }
     },
-    [setInnerHtml, setHasContent]
+    [setInnerHtml]
   );
 
   const placeholderStyle = "content-[attr(placeholder)]";
+  const hrStyle = "";
   const ulStyle = "[&_ul]:list-disc marker:text-black";
   const olStyle = "[&_ol]:list-decimal marker:text-black";
   const liStyle = "[&_li]:ml-5";
@@ -101,9 +98,16 @@ const Row = ({ innerHtml, setInnerHtml }: Props) => {
         html={innerHtml || ""}
         onChange={onChangeContents}
         className={twMerge(
-          `w-full`,
+          `w-full space-y-2`,
           innerHtml
-            ? twMerge(ulStyle, olStyle, liStyle, codeStyle, blockquoteStyle)
+            ? twMerge(
+                hrStyle,
+                ulStyle,
+                olStyle,
+                liStyle,
+                codeStyle,
+                blockquoteStyle
+              )
             : placeholderStyle
         )}
       />
