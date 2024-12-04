@@ -99,6 +99,9 @@
   *[contenteditable] {
     @apply inline-block cursor-text caret-black focus:outline-none empty:after:content-[attr(placeholder)] empty:block empty:text-gray-300;
   }
+  li {
+    @apply empty:after:content-['내용을_입력하세요'] empty:text-gray-300;
+  }
   body {
     @apply bg-background text-foreground;
   }

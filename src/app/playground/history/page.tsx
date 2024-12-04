@@ -1,4 +1,5 @@
 import Header from "@/src/components/backdrop/header";
+import History from "@/src/components/playground/history";
 
 const breadcrumbs = {
   title: "History",
@@ -13,7 +14,7 @@ const history = () => {
     <>
       <Header page={breadcrumbs} />
       <div className="flex flex-1 flex-col gap-4 p-2 pt-1">
-        <div>history</div>
+        <History />
       </div>
     </>
   );
