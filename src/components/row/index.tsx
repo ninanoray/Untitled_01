@@ -40,14 +40,17 @@ const Row = ({ innerHtml, setInnerHtml }: Props) => {
       });
 
       if (
-        content.includes(" ") ||
+        content.includes("&nbsp;") ||
         content.includes("```") ||
         content.includes("---")
       ) {
-        const parsedHtml = marked(content, { async: false });
+        const parsedHtml = marked(content.replace("&nbsp;", ""), {
+          async: false,
+        });
         console.log(parsedHtml);
-        if (!type) setInnerHtml(addHTMLAttributes(parsedHtml));
-        else if (type.includes("br") || type.includes("div")) {
+        if (!type) {
+          setInnerHtml(addHTMLAttributes(parsedHtml));
+        } else if (type.includes("br") || type.includes("div")) {
           setInnerHtml(undefined);
         }
       } else if (!content) setInnerHtml(undefined);
