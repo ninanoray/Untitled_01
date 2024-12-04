@@ -8,7 +8,7 @@ const Playground = () => {
   const [html, setHtml] = useState<string>();
 
   return (
-    <div className="size-full p-2 space-y-2">
+    <div className="size-full p-2 space-y-4">
       <Titlearea placeholder="새 페이지" />
       <Row innerHtml={html} setInnerHtml={setHtml} />
     </div>

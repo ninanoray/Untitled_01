@@ -1,3 +1,5 @@
+"use client";
+
 import { marked } from "marked";
 import { ElementType, useState } from "react";
 import { Textarea } from "../../ui/textarea";
@@ -5,7 +7,10 @@ import { Titlearea } from "../../ui/titlearea";
 
 const History = () => {
   const [textAreaValue, setTextAreaValue] = useState<string>();
-  const result = marked(textAreaValue || "", { async: false });
+  const result = marked(textAreaValue || "", { async: false }).replace(
+    `disabled=""`,
+    ""
+  );
 
   const parseMarkdown = (markdown: string | undefined) => {
     const regex = /<[^>]*>?/g; // html 태그 정규식
@@ -37,14 +42,16 @@ const History = () => {
   };
 
   return (
-    <div className="size-full p-2 space-y-2">
+    <div className="size-full p-2 space-y-4">
       <Titlearea placeholder="새 페이지" />
-      {result}
+      HTML: {result}
       <div
         contentEditable
-        dangerouslySetInnerHTML={{ __html: result }}
+        dangerouslySetInnerHTML={{
+          __html: result || "HTML로 파싱된 MD 출력",
+        }}
         className="w-full"
-      />
+      ></div>
       <Textarea
         value={textAreaValue}
         onChange={(e) => {
