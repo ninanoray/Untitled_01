@@ -28,7 +28,7 @@ npm run dev
 npm run start
 ```
 
-Open [http://localhost:3000](http://localhost:3300) with your browser to see the result.
+Open [http://localhost:3300](http://localhost:3300) with your browser to see the result.
 
 # Skills
 
