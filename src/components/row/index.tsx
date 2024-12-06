@@ -1,14 +1,17 @@
 import { marked } from "marked";
-import { Dispatch, SetStateAction, useCallback } from "react";
+import { KeyboardEvent, useCallback, useState } from "react";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import { twMerge } from "tailwind-merge";
 
 type Props = {
   innerHtml: string | undefined;
-  setInnerHtml: Dispatch<SetStateAction<string | undefined>>;
+  setInnerHtml: (result: string | undefined) => void;
+  addRow: () => void;
+  subtractRow: () => void;
 };
 
-const Row = ({ innerHtml, setInnerHtml }: Props) => {
+const Row = ({ innerHtml, setInnerHtml, addRow, subtractRow }: Props) => {
+  const [contentOffset, setContentOffset] = useState<number>();
   // string html 태그에 속성 추가
   const addHTMLAttributes = (html: string) => {
     return html
@@ -31,12 +34,12 @@ const Row = ({ innerHtml, setInnerHtml }: Props) => {
     (event: ContentEditableEvent) => {
       const regexAllTag = /<[^>]*>?/g; // html의 모든 태그 정규식
 
-      const currentHtmlvalue = event.target.value;
+      const currentHtmlvalue = event.target.value.replaceAll("<br>", "");
       const type = getHTMLtagName(currentHtmlvalue);
       const content = currentHtmlvalue.replace(regexAllTag, "");
       const cursor = document.getSelection();
       const offset = cursor?.anchorOffset;
-
+      setContentOffset(offset);
       /*
         1. marked에서 &nbsp와 MD문법이 겹치면 인식을 못하기 때문에 제거
         2. 인용 문법을 '>'에서 '|'로 변경
@@ -65,10 +68,21 @@ const Row = ({ innerHtml, setInnerHtml }: Props) => {
         setInnerHtml(addHTMLAttributes(parsedHtml));
       else setInnerHtml(currentHtmlvalue);
 
-      console.log({ tag: type, offset: offset, result: innerHtml });
+      console.log({
+        tag: type,
+        content: currentHtmlvalue,
+        offset: offset,
+        result: innerHtml,
+      });
     },
-    [innerHtml, setInnerHtml]
+    [innerHtml, setInnerHtml, setContentOffset]
   );
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
+    if (e.key === "Enter" && contentOffset === undefined) addRow();
+    else if (e.key === "Backspace" && contentOffset === undefined)
+      subtractRow();
+  };
 
   const placeholderStyle = "content-[attr(placeholder)]";
   const hrStyle = "";
@@ -88,6 +102,7 @@ const Row = ({ innerHtml, setInnerHtml }: Props) => {
         placeholder={"글을 작성하거나 마크다운 텍스트를 입력하세요"}
         html={innerHtml || ""}
         onChange={onChangeContents}
+        onKeyDown={handleKeyDown}
         className={twMerge(
           `w-full space-y-2`,
           innerHtml
