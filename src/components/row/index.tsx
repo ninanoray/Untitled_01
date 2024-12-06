@@ -1,5 +1,5 @@
 import { marked } from "marked";
-import { Dispatch, SetStateAction, useCallback, useRef } from "react";
+import { Dispatch, SetStateAction, useCallback } from "react";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import { twMerge } from "tailwind-merge";
 
@@ -9,74 +9,65 @@ type Props = {
 };
 
 const Row = ({ innerHtml, setInnerHtml }: Props) => {
-  const contentEditableRef = useRef<HTMLElement>(null);
-
+  // string html 태그에 속성 추가
   const addHTMLAttributes = (html: string) => {
-    // const regexOpenTag = /<[a-z]+[^>]*/g;
-    // const regexCloseTag = /<\/+[^>]*>?/g;
-    // const openTags = html.match(regexOpenTag);
-    // const editedOpenTags = openTags?.map((tag, index) => {
-    //   if (index !== openTags.length - 1) return `${tag}>`;
-    //   else
-    //     return `${tag} contenteditable="true" placeholder="내용을 입력하세요">`;
-    // });
-    // const closeTags = html.match(regexCloseTag) || "";
-    // const content =
-    //   html
-    //     .match(/(?<=\>)(.*?)(?=\<)/g)
-    //     ?.toString()
-    //     .replace(",", "") || "";
-
-    // const result = `${editedOpenTags?.toString().replace(",", "")}${content}${closeTags?.toString().replace(",", "")}`;
-    //   return result;
     return html
       ? `${html.slice(0, html?.indexOf(">"))} contenteditable="true" placeholder="내용을 입력하세요"${html.slice(html?.indexOf(">"))}`
       : "";
   };
 
+  // html tag 이름 가져오기, 괄호와 속성 제외
   const getHTMLtagName = (html: string) => {
-    const regex = /<[^>]*>?/g; // html 태그 정규식
+    const regexFirstTag = /<[^>]*>?/; // html 첫번째 태그 정규식
     return html
-      .match(regex)
-      ?.at(0)
-      ?.replace("<", "")
-      .replace(">", "")
-      .split(" ")[0];
+      .match(regexFirstTag)
+      ?.toString()
+      .split(" ")[0]
+      .replace("<", "")
+      .replace(">", "");
   };
 
   const onChangeContents = useCallback(
     (event: ContentEditableEvent) => {
-      const innerHtmlvalue = event.target.value;
-      const type = getHTMLtagName(innerHtmlvalue);
+      const regexAllTag = /<[^>]*>?/g; // html의 모든 태그 정규식
 
-      const content = innerHtmlvalue.replace(/<[^>]*>?/g, "").replace("|", ">");
+      const currentHtmlvalue = event.target.value;
+      const type = getHTMLtagName(currentHtmlvalue);
+      const content = currentHtmlvalue.replace(regexAllTag, "");
       const cursor = document.getSelection();
       const offset = cursor?.anchorOffset;
 
-      console.log({
-        innerHtml: innerHtmlvalue,
-        type: type,
-        content: content,
-        offset: offset,
-      });
-
-      if (!type) {
-        setInnerHtml(undefined);
-        const parsedHtml = marked(content.replace("&nbsp;", ""), {
+      /*
+        1. marked에서 &nbsp와 MD문법이 겹치면 인식을 못하기 때문에 제거
+        2. 인용 문법을 '>'에서 '|'로 변경
+      */
+      const parsedHtml = marked(
+        content.replace("&nbsp;", "").replace("|", ">"),
+        {
           async: false,
-        });
-        console.log(parsedHtml);
-        if (
-          (getHTMLtagName(parsedHtml) !== "p" && /&nbsp;$/.test(content)) ||
-          content.includes("```")
-        ) {
-          setInnerHtml(addHTMLAttributes(parsedHtml));
-        } else if (content.includes("---")) setInnerHtml(parsedHtml);
-      } else if (type.includes("div")) {
+        }
+      );
+
+      if (type === "div")
+        // 타입이 div일땐 초기화
         setInnerHtml(undefined);
-      }
+      else if (getHTMLtagName(parsedHtml) === "p")
+        // 파싱된 HTML이 p 일땐 파싱 없이 저장
+        setInnerHtml(currentHtmlvalue);
+      else if (content.includes("---"))
+        // hr은 속성 없이 파싱
+        setInnerHtml(parsedHtml);
+      else if (content.includes("```"))
+        // code이면 속성 추가하여 파싱
+        setInnerHtml(addHTMLAttributes(parsedHtml));
+      else if (/&nbsp;$/.test(content))
+        // 내용의 마지막이 "띄어쓰기"이면 속성 추가하여 파싱
+        setInnerHtml(addHTMLAttributes(parsedHtml));
+      else setInnerHtml(currentHtmlvalue);
+
+      console.log({ tag: type, offset: offset, result: innerHtml });
     },
-    [setInnerHtml]
+    [innerHtml, setInnerHtml]
   );
 
   const placeholderStyle = "content-[attr(placeholder)]";
