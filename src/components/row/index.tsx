@@ -1,16 +1,36 @@
 import { marked } from "marked";
-import { KeyboardEvent, useCallback, useState } from "react";
+import {
+  Dispatch,
+  KeyboardEvent,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import { twMerge } from "tailwind-merge";
 
 type Props = {
-  innerHtml: string | undefined;
-  setInnerHtml: (result: string | undefined) => void;
-  onKeydown?: (e: KeyboardEvent<HTMLElement>) => void;
+  id: number;
+  data: (string | undefined)[];
+  setData: Dispatch<SetStateAction<(string | undefined)[]>>;
 };
 
-const Row = ({ innerHtml, setInnerHtml, onKeydown }: Props) => {
-  const [contentOffset, setContentOffset] = useState<number>();
+const ADDROW = "Add";
+const DELETEROW = "DEL";
+
+const Row = ({ id, data, setData }: Props) => {
+  const innerHtml: string | undefined = data[id];
+  const setInnerHtml = useCallback(
+    (value: string | undefined) => {
+      const temp = [...data];
+      temp[id] = value;
+      setData(temp);
+    },
+    [data, id, setData]
+  );
+  const [keycode, setKeyCode] = useState("");
+
   // string html 태그에 속성 추가
   const addHTMLAttributes = (html: string) => {
     return html
@@ -29,6 +49,7 @@ const Row = ({ innerHtml, setInnerHtml, onKeydown }: Props) => {
       .replace(">", "");
   };
 
+  // Row change event
   const onChangeContents = useCallback(
     (event: ContentEditableEvent) => {
       const regexAllTag = /<[^>]*>?/g; // html의 모든 태그 정규식
@@ -38,7 +59,6 @@ const Row = ({ innerHtml, setInnerHtml, onKeydown }: Props) => {
       const content = currentHtmlvalue.replace(regexAllTag, "");
       const cursor = document.getSelection();
       const offset = cursor?.anchorOffset;
-      setContentOffset(offset);
       /*
         1. marked에서 &nbsp와 MD문법이 겹치면 인식을 못하기 때문에 제거
         2. 인용 문법을 '>'에서 '|'로 변경
@@ -50,32 +70,80 @@ const Row = ({ innerHtml, setInnerHtml, onKeydown }: Props) => {
         }
       );
 
-      if (type === "div")
+      if (type === "div") {
         // 타입이 div일땐 초기화
         setInnerHtml(undefined);
-      else if (getHTMLtagName(parsedHtml) === "p")
+      } else if (getHTMLtagName(parsedHtml) === "p") {
         // 파싱된 HTML이 p 일땐 파싱 없이 저장
         setInnerHtml(currentHtmlvalue);
-      else if (content.includes("---"))
+      } else if (content.includes("---")) {
         // hr은 속성 없이 파싱
         setInnerHtml(parsedHtml);
-      else if (content.includes("```"))
+      } else if (content.includes("```")) {
         // code이면 속성 추가하여 파싱
         setInnerHtml(addHTMLAttributes(parsedHtml));
-      else if (/&nbsp;$/.test(content))
+      } else if (/&nbsp;$/.test(content)) {
         // 내용의 마지막이 "띄어쓰기"이면 속성 추가하여 파싱
         setInnerHtml(addHTMLAttributes(parsedHtml));
-      else setInnerHtml(currentHtmlvalue);
+      } else {
+        setInnerHtml(currentHtmlvalue);
+      }
 
-      // console.log({
-      //   tag: type,
-      //   content: currentHtmlvalue,
-      //   offset: offset,
-      //   result: innerHtml,
-      // });
+      console.log({
+        tag: type,
+        content: currentHtmlvalue,
+        offset: offset,
+      });
     },
-    [setInnerHtml, setContentOffset]
+    [setInnerHtml]
   );
+
+  // Row 키입력 이벤트
+  const handleKeydown = useCallback(
+    (e: KeyboardEvent<HTMLElement>, id: number) => {
+      if (!data || !setData || e.nativeEvent.isComposing) {
+        return;
+      } else {
+        if (e.currentTarget === e.target) {
+          const code = e.code.toLowerCase();
+          if (code === "enter") {
+            e.preventDefault();
+            setKeyCode(ADDROW);
+          } else if (code === "backspace") {
+            const text = e.currentTarget.innerText;
+            const cursor = document.getSelection();
+            const offset = cursor?.anchorOffset;
+            if (offset === 0 && text === "") setKeyCode(`${DELETEROW}${id}`);
+          }
+        }
+      }
+    },
+    [data, setData]
+  );
+
+  // Row 추가
+  const addRow = useCallback(() => {
+    setData([...data, undefined]);
+    setKeyCode("");
+  }, [data, setData]);
+
+  // Row 삭제
+  const deleteRow = useCallback(
+    (id: number) => {
+      if (data.length > 1) setData(data.filter((_, i) => i !== id));
+      setKeyCode("");
+    },
+    [data, setData]
+  );
+
+  // 키입력 업데이트
+  useEffect(() => {
+    if (keycode === ADDROW) setTimeout(() => addRow(), 0);
+    else if (keycode.includes(DELETEROW)) {
+      const rowID = Number(keycode.replace(DELETEROW, ""));
+      setTimeout(() => deleteRow(rowID), 0);
+    }
+  }, [addRow, keycode, deleteRow]);
 
   const placeholderStyle = "content-[attr(placeholder)]";
   const hrStyle = "";
@@ -92,10 +160,10 @@ const Row = ({ innerHtml, setInnerHtml, onKeydown }: Props) => {
   return (
     <div className="w-full px-3">
       <ContentEditable
-        placeholder={"글을 작성하거나 마크다운 텍스트를 입력하세요"}
         html={innerHtml || ""}
         onChange={onChangeContents}
-        onKeyDown={onKeydown}
+        onKeyDown={(e) => handleKeydown(e, id)}
+        placeholder={"글을 작성하거나 마크다운 텍스트를 입력하세요"}
         className={twMerge(
           `w-full space-y-2`,
           innerHtml
