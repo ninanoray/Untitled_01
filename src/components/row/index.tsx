@@ -113,7 +113,7 @@ const Row = ({ id, data, setData }: Props) => {
             const text = e.currentTarget.innerText;
             const cursor = document.getSelection();
             const offset = cursor?.anchorOffset;
-            if (offset === 0 && text === "") setKeyCode(`${DELETEROW}${id}`);
+            if (offset === 0 && text === "") setKeyCode(DELETEROW);
           }
         }
       }
@@ -121,13 +121,21 @@ const Row = ({ id, data, setData }: Props) => {
     [data, setData]
   );
 
-  // Row 추가
-  const addRow = useCallback(() => {
-    setData([...data, undefined]);
-    setKeyCode("");
-  }, [data, setData]);
+  // 현재 커서 위치 다음에 Row 추가
+  const addRow = useCallback(
+    (id: number) => {
+      const start = data.slice(0, id);
+      const end = data.slice(id);
+      const insert = [...start, undefined, ...end];
+      console.log(id, insert);
+      // setData([...data, undefined]);
+      setData(insert);
+      setKeyCode("");
+    },
+    [data, setData]
+  );
 
-  // Row 삭제
+  // 현재 커서 위치 Row 삭제
   const deleteRow = useCallback(
     (id: number) => {
       if (data.length > 1) setData(data.filter((_, i) => i !== id));
@@ -138,12 +146,11 @@ const Row = ({ id, data, setData }: Props) => {
 
   // 키입력 업데이트
   useEffect(() => {
-    if (keycode === ADDROW) setTimeout(() => addRow(), 0);
+    if (keycode === ADDROW) setTimeout(() => addRow(id), 0);
     else if (keycode.includes(DELETEROW)) {
-      const rowID = Number(keycode.replace(DELETEROW, ""));
-      setTimeout(() => deleteRow(rowID), 0);
+      setTimeout(() => deleteRow(id), 0);
     }
-  }, [addRow, keycode, deleteRow]);
+  }, [addRow, deleteRow, id, keycode]);
 
   const placeholderStyle = "content-[attr(placeholder)]";
   const hrStyle = "";
