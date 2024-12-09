@@ -124,9 +124,10 @@ const Row = ({ id, data, setData }: Props) => {
   // 현재 커서 위치 다음에 Row 추가
   const addRow = useCallback(
     (id: number) => {
-      const start = data.slice(0, id);
-      const end = data.slice(id);
+      const start = data.slice(0, id + 1);
+      const end = data.slice(id + 1);
       const insert = [...start, undefined, ...end];
+      console.log(start);
       console.log(id, insert);
       // setData([...data, undefined]);
       setData(insert);
