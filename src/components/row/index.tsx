@@ -6,11 +6,10 @@ import { twMerge } from "tailwind-merge";
 type Props = {
   innerHtml: string | undefined;
   setInnerHtml: (result: string | undefined) => void;
-  addRow: () => void;
-  subtractRow: () => void;
+  onKeydown?: (e: KeyboardEvent<HTMLElement>) => void;
 };
 
-const Row = ({ innerHtml, setInnerHtml, addRow, subtractRow }: Props) => {
+const Row = ({ innerHtml, setInnerHtml, onKeydown }: Props) => {
   const [contentOffset, setContentOffset] = useState<number>();
   // string html 태그에 속성 추가
   const addHTMLAttributes = (html: string) => {
@@ -34,7 +33,7 @@ const Row = ({ innerHtml, setInnerHtml, addRow, subtractRow }: Props) => {
     (event: ContentEditableEvent) => {
       const regexAllTag = /<[^>]*>?/g; // html의 모든 태그 정규식
 
-      const currentHtmlvalue = event.target.value.replaceAll("<br>", "");
+      const currentHtmlvalue = event.target.value;
       const type = getHTMLtagName(currentHtmlvalue);
       const content = currentHtmlvalue.replace(regexAllTag, "");
       const cursor = document.getSelection();
@@ -68,21 +67,15 @@ const Row = ({ innerHtml, setInnerHtml, addRow, subtractRow }: Props) => {
         setInnerHtml(addHTMLAttributes(parsedHtml));
       else setInnerHtml(currentHtmlvalue);
 
-      console.log({
-        tag: type,
-        content: currentHtmlvalue,
-        offset: offset,
-        result: innerHtml,
-      });
+      // console.log({
+      //   tag: type,
+      //   content: currentHtmlvalue,
+      //   offset: offset,
+      //   result: innerHtml,
+      // });
     },
-    [innerHtml, setInnerHtml, setContentOffset]
+    [setInnerHtml, setContentOffset]
   );
-
-  const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
-    if (e.key === "Enter" && contentOffset === undefined) addRow();
-    else if (e.key === "Backspace" && contentOffset === undefined)
-      subtractRow();
-  };
 
   const placeholderStyle = "content-[attr(placeholder)]";
   const hrStyle = "";
@@ -102,7 +95,7 @@ const Row = ({ innerHtml, setInnerHtml, addRow, subtractRow }: Props) => {
         placeholder={"글을 작성하거나 마크다운 텍스트를 입력하세요"}
         html={innerHtml || ""}
         onChange={onChangeContents}
-        onKeyDown={handleKeyDown}
+        onKeyDown={onKeydown}
         className={twMerge(
           `w-full space-y-2`,
           innerHtml
