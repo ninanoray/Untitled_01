@@ -6,17 +6,18 @@ import { Titlearea } from "../ui/titlearea";
 
 const Playground = () => {
   const [htmlData, setHtmlData] = useState<(string | undefined)[]>([undefined]);
-  const [code, setCode] = useState("");
+  const [keycode, setKeyCode] = useState("");
 
   const addRow = useCallback(() => {
     setHtmlData([...htmlData, undefined]);
-    setCode("");
+    setKeyCode("");
   }, [htmlData]);
 
   const subtractRow = useCallback(
     (index: number) => {
       if (htmlData.length > 1)
         setHtmlData(htmlData.filter((_, i) => i !== index));
+      setKeyCode("");
     },
     [htmlData]
   );
@@ -27,24 +28,23 @@ const Playground = () => {
         const code = e.code.toLowerCase();
         if (code === "enter") {
           e.preventDefault();
-          setCode("Add");
+          setKeyCode("Add");
         } else if (code === "backspace") {
           const text = e.currentTarget.innerText;
           const cursor = document.getSelection();
           const offset = cursor?.anchorOffset;
-          // setCode("Sub");
-          setCode("");
-          if (offset === 0 && text === "") subtractRow(index);
-        } else setCode("");
+          if (offset === 0 && text === "") setKeyCode(`Sub${index}`);
+        }
       }
     },
-    [subtractRow]
+    []
   );
 
   useEffect(() => {
-    if (code === "Add") setTimeout(() => addRow(), 0);
-    // else if (code === "Sub") setTimeout(() => subtractRow(), 0);
-  }, [addRow, code, subtractRow]);
+    if (keycode === "Add") setTimeout(() => addRow(), 0);
+    else if (keycode.includes("Sub"))
+      setTimeout(() => subtractRow(Number(keycode.replace("Sub", ""))), 0);
+  }, [addRow, keycode, subtractRow]);
 
   return (
     <div className="size-full p-2 space-y-4">
