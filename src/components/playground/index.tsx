@@ -5,12 +5,14 @@ import Row from "../row";
 import { Titlearea } from "../ui/titlearea";
 
 const Playground = () => {
-  const [html, setHtml] = useState<string>();
+  const [rows, setRows] = useState<(string | undefined)[]>([undefined]);
 
   return (
     <div className="size-full p-2 space-y-4">
       <Titlearea placeholder="새 페이지" />
-      <Row innerHtml={html} setInnerHtml={setHtml} />
+      {rows.map((_, index) => (
+        <Row key={index} id={index} data={rows} setData={setRows} />
+      ))}
     </div>
   );
 };
