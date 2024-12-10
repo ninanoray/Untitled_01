@@ -1,7 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 
+export const API_SERVER = `${process.env.NEXT_PUBLIC_SERVER}`;
+
 // url 호출 시 기본 값 셋팅
-export const apiAxios = axios.create({
+export const axiosInstance = axios.create({
   // baseURL: ``,
   headers: {
     "Content-type": "application/json",
@@ -10,7 +12,7 @@ export const apiAxios = axios.create({
 });
 
 // Add a request interceptor
-apiAxios.interceptors.request.use(
+axiosInstance.interceptors.request.use(
   (config) => {
     console.log(`(${config.method})${config.url}`);
 
@@ -22,7 +24,7 @@ apiAxios.interceptors.request.use(
 );
 
 // Add a response interceptor
-apiAxios.interceptors.response.use(
+axiosInstance.interceptors.response.use(
   async (response) => {
     return response;
   },
@@ -31,4 +33,4 @@ apiAxios.interceptors.response.use(
   }
 );
 
-export default apiAxios;
+export default axiosInstance;

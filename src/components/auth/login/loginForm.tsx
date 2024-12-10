@@ -21,6 +21,7 @@ import {
   loginFormSchema,
   pinFormSchema,
 } from "./loginFormSchema";
+import axiosInstance from "@/src/lib/apiAxiosInterceptors";
 
 const CHECK_EMAIL = 0;
 const CHECK_PASSWORD = 1;
@@ -53,17 +54,22 @@ const LoginForm = () => {
     },
   });
 
-  const checkEmail = async () => {
+  const checkEmail = async (body: z.infer<typeof emailFormSchema>) => {
     try {
-      // const response = await axios
-    } catch (error) {}
+      const response = await axiosInstance.post(
+        "/api/auth/validate-email",
+        body
+      );
+      console.log(response.data);
+      setLoginMode(CHECK_PASSWORD);
+      return response.data;
+    } catch (error) {
+      setLoginMode(CHECK_PIN);
+    }
   };
 
   function onSubmitEmail(values: z.infer<typeof emailFormSchema>) {
-    console.log(values);
-
-    if (values.email.includes("test")) setLoginMode(CHECK_PASSWORD);
-    else setLoginMode(CHECK_PIN);
+    checkEmail(values);
   }
 
   function onSubmitLogin(values: z.infer<typeof loginFormSchema>) {
