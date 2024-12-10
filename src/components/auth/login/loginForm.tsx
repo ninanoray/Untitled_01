@@ -53,8 +53,15 @@ const LoginForm = () => {
     },
   });
 
+  const checkEmail = async () => {
+    try {
+      // const response = await axios
+    } catch (error) {}
+  };
+
   function onSubmitEmail(values: z.infer<typeof emailFormSchema>) {
     console.log(values);
+
     if (values.email.includes("test")) setLoginMode(CHECK_PASSWORD);
     else setLoginMode(CHECK_PIN);
   }

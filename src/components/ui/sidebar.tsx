@@ -1,7 +1,7 @@
 "use client";
 
 import { useIsMobile } from "@/src/hooks/use-mobile";
-import { cn } from "@/src/lib/utils";
+import { cn } from "@/src/lib/tailwindMerge";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Slot } from "@radix-ui/react-slot";
 import {

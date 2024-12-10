@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import BackdropProvider from "../components/backdrop";
+import { QueryClient, QueryClientProvider } from "react-query";
 import "./globals.css";
+import ReactQueryProviders from "../utils/reactQueryProviders";
 
 const notoSansKr = Noto_Sans_KR({
   preload: true,
@@ -22,9 +24,9 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={notoSansKr.className}>
-        <div id="root">
+        <ReactQueryProviders>
           <BackdropProvider>{children}</BackdropProvider>
-        </div>
+        </ReactQueryProviders>
       </body>
     </html>
   );
