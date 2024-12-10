@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 
+const API_SERVER = `${process.env.NEXT_PUBLIC_SERVER}`;
+
 const nextConfig = {
   reactStrictMode: true,
   images: {
@@ -26,10 +28,10 @@ const nextConfig = {
   },
   async rewrites() {
     return [
-      // {
-      //   source: "/:path*", // api 요청
-      //   destination: `${API_SERVER}/:path*`, // 프록시할 서버의 주소
-      // },
+      {
+        source: "/:path*", // api 요청
+        destination: `${API_SERVER}/:path*`, // 프록시할 서버의 주소
+      },
     ];
   },
 };

@@ -121,18 +121,27 @@ const Row = ({ id, data, setData }: Props) => {
     [data, setData]
   );
 
+  const moveFocus = useCallback((targetId: number) => {
+    const contentsHtml = document.getElementById(`${targetId}`);
+    if (contentsHtml) {
+      const focusTargetHtml = contentsHtml.firstElementChild as HTMLElement;
+      focusTargetHtml.focus();
+    } else {
+      console.error(`Can't find row ${targetId}`);
+    }
+  }, []);
+
   // 현재 커서 위치 다음에 Row 추가
   const addRow = useCallback(
     (id: number) => {
-      const start = data.slice(0, id);
-      const end = data.slice(id);
+      const start = data.slice(0, id + 1);
+      const end = data.slice(id + 1);
       const insert = [...start, undefined, ...end];
-      console.log(id, insert);
-      // setData([...data, undefined]);
+      moveFocus(id + 1);
       setData(insert);
       setKeyCode("");
     },
-    [data, setData]
+    [data, moveFocus, setData]
   );
 
   // 현재 커서 위치 Row 삭제

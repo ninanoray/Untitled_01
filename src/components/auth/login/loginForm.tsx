@@ -21,13 +21,23 @@ import {
   loginFormSchema,
   pinFormSchema,
 } from "./loginFormSchema";
+import axiosInstance from "@/src/lib/apiAxiosInterceptors";
+import {
+  EMAIL_BLOCKED,
+  EMAIL_CHECKED,
+  EMAIL_LOGIN,
+  EMAIL_NEW,
+} from "@/src/constant/apiResponseCode";
+import useOptimisticMutation, {
+  queryKeys,
+} from "@/src/hooks/useOptimisticMutation";
 
-const CHECK_EMAIL = 0;
-const CHECK_PASSWORD = 1;
-const CHECK_PIN = 2;
+const STEP_INIT = 0;
+const STEP_PASSWORD = 1;
+const STEP_PIN = 2;
 
 const LoginForm = () => {
-  const [loginMode, setLoginMode] = useState<number>(CHECK_EMAIL);
+  const [authStep, setAuthStep] = useState<number>(STEP_INIT);
   const [pinCount, setPinCount] = useState<number>(30);
 
   const router = useRouter();
@@ -53,11 +63,42 @@ const LoginForm = () => {
     },
   });
 
-  function onSubmitEmail(values: z.infer<typeof emailFormSchema>) {
-    console.log(values);
-    if (values.email.includes("test")) setLoginMode(CHECK_PASSWORD);
-    else setLoginMode(CHECK_PIN);
-  }
+  // 이메일 체크 요청
+  const checkEmail = async (body: z.infer<typeof emailFormSchema>) => {
+    const response = await axiosInstance.post("/api/auth/validate-email", body);
+    return response.data;
+  };
+  const { mutate: checkEmailMutate } = useOptimisticMutation(
+    checkEmail,
+    queryKeys.emailController.email(),
+    (code) => {
+      switch (code) {
+        case EMAIL_LOGIN:
+          setAuthStep(STEP_PASSWORD);
+          break;
+        default:
+          break;
+      }
+    },
+    (code) => {
+      switch (code) {
+        case EMAIL_CHECKED:
+          alert("인증 완료된 이메일");
+          router.push("/auth/signup");
+          break;
+        case EMAIL_NEW:
+          setAuthStep(STEP_PIN);
+          break;
+        case EMAIL_BLOCKED:
+          alert("비활성화 유저");
+          setAuthStep(STEP_INIT);
+          break;
+        default:
+          alert("로그인에 실패했습니다.");
+          break;
+      }
+    }
+  );
 
   function onSubmitLogin(values: z.infer<typeof loginFormSchema>) {
     console.log(values);
@@ -70,7 +111,7 @@ const LoginForm = () => {
   }
 
   useEffect(() => {
-    if (loginMode === CHECK_PIN) {
+    if (authStep === STEP_PIN) {
       const id = setInterval(() => {
         setPinCount((count) => count - 1);
       }, 1000);
@@ -79,13 +120,15 @@ const LoginForm = () => {
       }
       return () => clearInterval(id);
     }
-  }, [loginMode, pinCount]);
+  }, [authStep, pinCount]);
 
   return (
     <>
       <Form {...formEmail}>
         <form
-          onSubmit={formEmail.handleSubmit(onSubmitEmail)}
+          onSubmit={formEmail.handleSubmit((values) =>
+            checkEmailMutate(values)
+          )}
           className="space-y-6"
         >
           <FormField
@@ -98,7 +141,7 @@ const LoginForm = () => {
                   <Input
                     placeholder="이메일 주소를 입력하세요"
                     onInput={() => {
-                      setLoginMode(CHECK_EMAIL);
+                      setAuthStep(STEP_INIT);
                       formLogin.resetField("password");
                       formPin.resetField("pin");
                     }}
@@ -106,7 +149,7 @@ const LoginForm = () => {
                   />
                 </FormControl>
                 {!formEmail.formState.errors.email &&
-                  loginMode === CHECK_EMAIL && (
+                  authStep === STEP_INIT && (
                     <FormDescription>
                       팀원과 쉽게 협업하려면 조직 이메일을 사용하세요.
                     </FormDescription>
@@ -115,14 +158,14 @@ const LoginForm = () => {
               </FormItem>
             )}
           />
-          {loginMode === CHECK_EMAIL && (
+          {authStep === STEP_INIT && (
             <Button type="submit" className="w-full">
               계속
             </Button>
           )}
         </form>
       </Form>
-      {loginMode === CHECK_PASSWORD && (
+      {authStep === STEP_PASSWORD && (
         <Form {...formLogin}>
           <form
             onSubmit={formLogin.handleSubmit(onSubmitLogin)}
@@ -154,7 +197,7 @@ const LoginForm = () => {
           </form>
         </Form>
       )}
-      {loginMode === CHECK_PIN && (
+      {authStep === STEP_PIN && (
         <Form {...formPin}>
           <form
             onSubmit={formPin.handleSubmit(onSubmitPin)}
