@@ -10,13 +10,7 @@ type Props = {
   className?: string;
 };
 
-const UserMenuItem = ({
-  title,
-  Icon,
-  link,
-  color = "text-black",
-  className = "",
-}: Props) => {
+const UserMenuItem = ({ title, Icon, link, className = "" }: Props) => {
   const router = useRouter();
 
   return (
@@ -26,7 +20,7 @@ const UserMenuItem = ({
       }}
       className={`group -translate-x-6 hover:translate-x-0 trans-200 cursor-pointer ${className}`}
     >
-      <Icon className={`text-white group-hover:${color}`} />
+      <Icon className={`text-white group-hover:text-gray-700 trans-200`} />
       {title}
     </DropdownMenuItem>
   );
