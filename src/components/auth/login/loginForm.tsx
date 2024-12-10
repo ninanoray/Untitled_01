@@ -22,13 +22,26 @@ import {
   pinFormSchema,
 } from "./loginFormSchema";
 import axiosInstance from "@/src/lib/apiAxiosInterceptors";
+import { setLogger, useMutation, useQueryClient } from "react-query";
+import { AxiosError, AxiosResponse } from "axios";
+import {
+  EMAIL_BLOCKED,
+  EMAIL_CHECKED,
+  EMAIL_LOGIN,
+  EMAIL_NEW,
+} from "@/src/constant/apiResponseCode";
 
-const CHECK_EMAIL = 0;
-const CHECK_PASSWORD = 1;
-const CHECK_PIN = 2;
+const STEP_CHECK = 0;
+const STEP_PASSWORD = 1;
+const STEP_PIN = 2;
+
+export const emailKeys = {
+  all: ["email"] as const,
+  code: () => [...emailKeys.all, "code"] as const,
+};
 
 const LoginForm = () => {
-  const [loginMode, setLoginMode] = useState<number>(CHECK_EMAIL);
+  const [loginMode, setLoginMode] = useState<number>(STEP_CHECK);
   const [pinCount, setPinCount] = useState<number>(30);
 
   const router = useRouter();
@@ -54,21 +67,62 @@ const LoginForm = () => {
     },
   });
 
-  const checkEmail = async (body: z.infer<typeof emailFormSchema>) => {
-    try {
-      const response = await axiosInstance.post(
-        "/api/auth/validate-email",
-        body
-      );
-      setLoginMode(CHECK_PASSWORD);
-      return response.data;
-    } catch (error) {
-      setLoginMode(CHECK_PIN);
-    }
+  // 이메일 체크 요청
+  const queryClient = useQueryClient();
+  type APIResponse = {
+    code?: string;
+    data?: any;
+    message?: string;
+    status?: number;
   };
+  const checkEmail = useMutation<
+    AxiosResponse,
+    AxiosError,
+    z.infer<typeof emailFormSchema>
+  >({
+    mutationFn: async (body) => {
+      // console log 출력 관리
+      setLogger({
+        log: () => {},
+        warn: () => {},
+        error: () => {},
+      });
+      return await axiosInstance.post("/api/auth/validate-email", body);
+    },
+    onSuccess: (data, varialbes) => {
+      const responseData = data.data as APIResponse;
+      if (responseData.code === EMAIL_LOGIN) {
+        queryClient.setQueryData(emailKeys.all, varialbes);
+        setLoginMode(STEP_PASSWORD);
+      }
+    },
+    onError: (error: AxiosError) => {
+      const errorResponse = error.response?.data as APIResponse;
+      switch (errorResponse.code) {
+        case EMAIL_CHECKED:
+          alert("인증 완료된 이메일");
+          queryClient.setQueryData(emailKeys.code(), errorResponse.code);
+          router.push("/auth/signup");
+          break;
+        case EMAIL_NEW:
+          alert("새로운 유저");
+          queryClient.setQueryData(emailKeys.code(), errorResponse.code);
+          setLoginMode(STEP_PIN);
+          break;
+        case EMAIL_BLOCKED:
+          alert("비활성화 유저");
+          queryClient.setQueryData(emailKeys.code(), errorResponse.code);
+          setLoginMode(STEP_CHECK);
+          break;
+        default:
+          alert("로그인에 실패했습니다.");
+          break;
+      }
+    },
+  });
 
   function onSubmitEmail(values: z.infer<typeof emailFormSchema>) {
-    checkEmail(values);
+    checkEmail.mutate(values);
   }
 
   function onSubmitLogin(values: z.infer<typeof loginFormSchema>) {
@@ -82,7 +136,7 @@ const LoginForm = () => {
   }
 
   useEffect(() => {
-    if (loginMode === CHECK_PIN) {
+    if (loginMode === STEP_PIN) {
       const id = setInterval(() => {
         setPinCount((count) => count - 1);
       }, 1000);
@@ -110,7 +164,7 @@ const LoginForm = () => {
                   <Input
                     placeholder="이메일 주소를 입력하세요"
                     onInput={() => {
-                      setLoginMode(CHECK_EMAIL);
+                      setLoginMode(STEP_CHECK);
                       formLogin.resetField("password");
                       formPin.resetField("pin");
                     }}
@@ -118,7 +172,7 @@ const LoginForm = () => {
                   />
                 </FormControl>
                 {!formEmail.formState.errors.email &&
-                  loginMode === CHECK_EMAIL && (
+                  loginMode === STEP_CHECK && (
                     <FormDescription>
                       팀원과 쉽게 협업하려면 조직 이메일을 사용하세요.
                     </FormDescription>
@@ -127,14 +181,14 @@ const LoginForm = () => {
               </FormItem>
             )}
           />
-          {loginMode === CHECK_EMAIL && (
+          {loginMode === STEP_CHECK && (
             <Button type="submit" className="w-full">
               계속
             </Button>
           )}
         </form>
       </Form>
-      {loginMode === CHECK_PASSWORD && (
+      {loginMode === STEP_PASSWORD && (
         <Form {...formLogin}>
           <form
             onSubmit={formLogin.handleSubmit(onSubmitLogin)}
@@ -166,7 +220,7 @@ const LoginForm = () => {
           </form>
         </Form>
       )}
-      {loginMode === CHECK_PIN && (
+      {loginMode === STEP_PIN && (
         <Form {...formPin}>
           <form
             onSubmit={formPin.handleSubmit(onSubmitPin)}
