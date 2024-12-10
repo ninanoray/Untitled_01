@@ -18,6 +18,7 @@ Notion 클론 코딩
 
 - [Node.js v20.15.0](https://nodejs.org/en/blog/release/v20.15.0)
 - [npm 10.9.0](https://www.npmjs.com/package/npm?activeTab=versions)
+- need `.env.local` file in the root directory
 
 ### Start
 
