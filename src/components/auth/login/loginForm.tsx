@@ -22,23 +22,19 @@ import {
   pinFormSchema,
 } from "./loginFormSchema";
 import axiosInstance from "@/src/lib/apiAxiosInterceptors";
-import { setLogger, useMutation, useQueryClient } from "react-query";
-import { AxiosError, AxiosResponse } from "axios";
 import {
   EMAIL_BLOCKED,
   EMAIL_CHECKED,
   EMAIL_LOGIN,
   EMAIL_NEW,
 } from "@/src/constant/apiResponseCode";
+import useOptimisticMutation, {
+  queryKeys,
+} from "@/src/hooks/useOptimisticMutation";
 
 const STEP_INIT = 0;
 const STEP_PASSWORD = 1;
 const STEP_PIN = 2;
-
-export const emailKeys = {
-  all: ["email"] as const,
-  code: () => [...emailKeys.all, "code"] as const,
-};
 
 const LoginForm = () => {
   const [authStep, setAuthStep] = useState<number>(STEP_INIT);
@@ -68,62 +64,41 @@ const LoginForm = () => {
   });
 
   // 이메일 체크 요청
-  const queryClient = useQueryClient();
-  type APIResponse = {
-    code?: string;
-    data?: any;
-    message?: string;
-    status?: number;
+  const checkEmail = async (body: z.infer<typeof emailFormSchema>) => {
+    const response = await axiosInstance.post("/api/auth/validate-email", body);
+    return response.data;
   };
-  const checkEmail = useMutation<
-    AxiosResponse,
-    AxiosError,
-    z.infer<typeof emailFormSchema>
-  >({
-    mutationFn: async (body) => {
-      // console log 출력 관리
-      setLogger({
-        log: () => {},
-        warn: () => {},
-        error: () => {},
-      });
-      return await axiosInstance.post("/api/auth/validate-email", body);
-    },
-    onSuccess: (data, varialbes) => {
-      const responseData = data.data as APIResponse;
-      if (responseData.code === EMAIL_LOGIN) {
-        queryClient.setQueryData(emailKeys.all, varialbes);
-        setAuthStep(STEP_PASSWORD);
+  const { mutate: checkEmailMutate } = useOptimisticMutation(
+    checkEmail,
+    queryKeys.emailController.email(),
+    (code) => {
+      switch (code) {
+        case EMAIL_LOGIN:
+          setAuthStep(STEP_PASSWORD);
+          break;
+        default:
+          break;
       }
     },
-    onError: (error: AxiosError) => {
-      const errorResponse = error.response?.data as APIResponse;
-      switch (errorResponse.code) {
+    (code) => {
+      switch (code) {
         case EMAIL_CHECKED:
           alert("인증 완료된 이메일");
-          queryClient.setQueryData(emailKeys.code(), errorResponse.code);
           router.push("/auth/signup");
           break;
         case EMAIL_NEW:
-          alert("새로운 유저");
-          queryClient.setQueryData(emailKeys.code(), errorResponse.code);
           setAuthStep(STEP_PIN);
           break;
         case EMAIL_BLOCKED:
           alert("비활성화 유저");
-          queryClient.setQueryData(emailKeys.code(), errorResponse.code);
           setAuthStep(STEP_INIT);
           break;
         default:
           alert("로그인에 실패했습니다.");
           break;
       }
-    },
-  });
-
-  function onSubmitEmail(values: z.infer<typeof emailFormSchema>) {
-    checkEmail.mutate(values);
-  }
+    }
+  );
 
   function onSubmitLogin(values: z.infer<typeof loginFormSchema>) {
     console.log(values);
@@ -151,7 +126,9 @@ const LoginForm = () => {
     <>
       <Form {...formEmail}>
         <form
-          onSubmit={formEmail.handleSubmit(onSubmitEmail)}
+          onSubmit={formEmail.handleSubmit((values) =>
+            checkEmailMutate(values)
+          )}
           className="space-y-6"
         >
           <FormField
