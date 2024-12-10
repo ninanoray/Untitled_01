@@ -31,7 +31,7 @@ import {
   EMAIL_NEW,
 } from "@/src/constant/apiResponseCode";
 
-const STEP_CHECK = 0;
+const STEP_INIT = 0;
 const STEP_PASSWORD = 1;
 const STEP_PIN = 2;
 
@@ -41,7 +41,7 @@ export const emailKeys = {
 };
 
 const LoginForm = () => {
-  const [loginMode, setLoginMode] = useState<number>(STEP_CHECK);
+  const [authStep, setAuthStep] = useState<number>(STEP_INIT);
   const [pinCount, setPinCount] = useState<number>(30);
 
   const router = useRouter();
@@ -93,7 +93,7 @@ const LoginForm = () => {
       const responseData = data.data as APIResponse;
       if (responseData.code === EMAIL_LOGIN) {
         queryClient.setQueryData(emailKeys.all, varialbes);
-        setLoginMode(STEP_PASSWORD);
+        setAuthStep(STEP_PASSWORD);
       }
     },
     onError: (error: AxiosError) => {
@@ -107,12 +107,12 @@ const LoginForm = () => {
         case EMAIL_NEW:
           alert("새로운 유저");
           queryClient.setQueryData(emailKeys.code(), errorResponse.code);
-          setLoginMode(STEP_PIN);
+          setAuthStep(STEP_PIN);
           break;
         case EMAIL_BLOCKED:
           alert("비활성화 유저");
           queryClient.setQueryData(emailKeys.code(), errorResponse.code);
-          setLoginMode(STEP_CHECK);
+          setAuthStep(STEP_INIT);
           break;
         default:
           alert("로그인에 실패했습니다.");
@@ -136,7 +136,7 @@ const LoginForm = () => {
   }
 
   useEffect(() => {
-    if (loginMode === STEP_PIN) {
+    if (authStep === STEP_PIN) {
       const id = setInterval(() => {
         setPinCount((count) => count - 1);
       }, 1000);
@@ -145,7 +145,7 @@ const LoginForm = () => {
       }
       return () => clearInterval(id);
     }
-  }, [loginMode, pinCount]);
+  }, [authStep, pinCount]);
 
   return (
     <>
@@ -164,7 +164,7 @@ const LoginForm = () => {
                   <Input
                     placeholder="이메일 주소를 입력하세요"
                     onInput={() => {
-                      setLoginMode(STEP_CHECK);
+                      setAuthStep(STEP_INIT);
                       formLogin.resetField("password");
                       formPin.resetField("pin");
                     }}
@@ -172,7 +172,7 @@ const LoginForm = () => {
                   />
                 </FormControl>
                 {!formEmail.formState.errors.email &&
-                  loginMode === STEP_CHECK && (
+                  authStep === STEP_INIT && (
                     <FormDescription>
                       팀원과 쉽게 협업하려면 조직 이메일을 사용하세요.
                     </FormDescription>
@@ -181,14 +181,14 @@ const LoginForm = () => {
               </FormItem>
             )}
           />
-          {loginMode === STEP_CHECK && (
+          {authStep === STEP_INIT && (
             <Button type="submit" className="w-full">
               계속
             </Button>
           )}
         </form>
       </Form>
-      {loginMode === STEP_PASSWORD && (
+      {authStep === STEP_PASSWORD && (
         <Form {...formLogin}>
           <form
             onSubmit={formLogin.handleSubmit(onSubmitLogin)}
@@ -220,7 +220,7 @@ const LoginForm = () => {
           </form>
         </Form>
       )}
-      {loginMode === STEP_PIN && (
+      {authStep === STEP_PIN && (
         <Form {...formPin}>
           <form
             onSubmit={formPin.handleSubmit(onSubmitPin)}
