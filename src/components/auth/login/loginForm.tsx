@@ -60,7 +60,6 @@ const LoginForm = () => {
         "/api/auth/validate-email",
         body
       );
-      console.log(response.data);
       setLoginMode(CHECK_PASSWORD);
       return response.data;
     } catch (error) {

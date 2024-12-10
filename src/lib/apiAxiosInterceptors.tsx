@@ -11,11 +11,16 @@ export const axiosInstance = axios.create({
   withCredentials: true,
 });
 
+// console log로 response 정보 출력
+const printResponse = (response: AxiosResponse) => {
+  const name = `(response)${response.config.url}`;
+  console.log({ [name]: response.data });
+};
+
 // Add a request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
     console.log(`(${config.method})${config.url}`);
-
     return config;
   },
   (error) => {
@@ -26,9 +31,11 @@ axiosInstance.interceptors.request.use(
 // Add a response interceptor
 axiosInstance.interceptors.response.use(
   async (response) => {
+    printResponse(response);
     return response;
   },
   (error) => {
+    printResponse(error.response);
     return Promise.reject(error);
   }
 );
