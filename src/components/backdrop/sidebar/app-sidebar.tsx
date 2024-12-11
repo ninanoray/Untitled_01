@@ -113,7 +113,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavPages label="페이지" pages={data.pages} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={globalUser.data} />
+        <NavUser user={globalUser} />
       </SidebarFooter>
       {/* <SidebarRail /> */}
     </Sidebar>
