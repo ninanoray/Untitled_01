@@ -3,7 +3,7 @@
 import { GoogleSVG } from "@/src/app/svg";
 import { Separator } from "@/src/components/ui/separator";
 import { Button } from "../../ui/button";
-import LoginForm from "./loginForm";
+import FormSetLogin from "./formSetLogin";
 
 const Login = () => {
   return (
@@ -16,7 +16,7 @@ const Login = () => {
           Google 계정으로 계속하기
         </Button>
         <Separator className="my-4" />
-        <LoginForm />
+        <FormSetLogin />
       </div>
     </div>
   );
