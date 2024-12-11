@@ -14,6 +14,8 @@ import { useSidebar } from "@/src/components/ui/sidebar";
 import { Bell, LogOut, Settings, UserRound } from "lucide-react";
 import UserMenuItem from "./userMenuItem";
 import { User } from "@/src/types/type";
+import { useRouter } from "next/navigation";
+import { useDataStore } from "@/src/stores/storeProvider";
 
 type Props = {
   user: User | undefined;
@@ -25,6 +27,10 @@ const DropdownUserContent = ({ user }: Props) => {
   const userEmail = user?.email || "untitled@untitled.com";
 
   const { isMobile } = useSidebar();
+
+  const router = useRouter();
+
+  const { reset } = useDataStore((state) => state);
 
   return (
     <DropdownMenuContent
@@ -59,7 +65,14 @@ const DropdownUserContent = ({ user }: Props) => {
         <UserMenuItem title="설정" Icon={Settings} />
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
-      <UserMenuItem title="로그아웃" Icon={LogOut} link="/auth/login" />
+      <UserMenuItem
+        title="로그아웃"
+        Icon={LogOut}
+        onClick={() => {
+          reset();
+          router.push("/auth/login");
+        }}
+      />
     </DropdownMenuContent>
   );
 };
