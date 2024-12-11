@@ -9,7 +9,7 @@ import {
   Form,
 } from "../../ui/form";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "../../ui/input-otp";
-import { STEP_PIN } from "./formSetLogin";
+import { LOGIN_STEP_PIN } from "./formSetLogin";
 import { Button } from "../../ui/button";
 import { useRouter } from "next/navigation";
 import { LoginFormSet, pinFormSchema } from "./loginFormSchema";
@@ -33,7 +33,7 @@ const FormPin = ({ step, formSet }: Props) => {
 
   // 핀 재전송 카운트 다운
   useEffect(() => {
-    if (step === STEP_PIN) {
+    if (step === LOGIN_STEP_PIN) {
       const id = setInterval(() => {
         setPinCount((count) => count - 1);
       }, 1000);
@@ -44,7 +44,7 @@ const FormPin = ({ step, formSet }: Props) => {
     }
   }, [step, pinCount]);
 
-  if (step === STEP_PIN)
+  if (step === LOGIN_STEP_PIN)
     return (
       <Form {...formSet.pin}>
         <form

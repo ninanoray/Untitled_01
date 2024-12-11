@@ -17,7 +17,7 @@ import {
   Form,
 } from "../../ui/form";
 import { Input } from "../../ui/input";
-import { STEP_PASSWORD } from "./formSetLogin";
+import { LOGIN_STEP_PASSWORD } from "./formSetLogin";
 import { LoginFormSet, signinFormSchema } from "./loginFormSchema";
 import { useRouter } from "next/navigation";
 import { User } from "@/src/types/type";
@@ -67,7 +67,7 @@ const FormSignin = ({ step, formSet }: Props) => {
     queryKeys.signinController.signin()
   );
 
-  if (step === STEP_PASSWORD)
+  if (step === LOGIN_STEP_PASSWORD)
     return (
       <Form {...formSet.signin}>
         <form

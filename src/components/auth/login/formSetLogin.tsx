@@ -11,12 +11,12 @@ import FormEmail from "./formEmail";
 import FormSignin from "./formSignin";
 import FormPin from "./formPin";
 
-export const STEP_INIT = 0;
-export const STEP_PASSWORD = 1;
-export const STEP_PIN = 2;
+export const LOGIN_STEP_INIT = 0;
+export const LOGIN_STEP_PASSWORD = 1;
+export const LOGIN_STEP_PIN = 2;
 
 const FormSetLogin = () => {
-  const [authStep, setAuthStep] = useState<number>(STEP_INIT);
+  const [authStep, setAuthStep] = useState<number>(LOGIN_STEP_INIT);
 
   const loginFormSet = {
     email: useForm<z.infer<typeof emailFormSchema>>({
