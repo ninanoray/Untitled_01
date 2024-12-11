@@ -3,6 +3,7 @@ import { Noto_Sans_KR } from "next/font/google";
 import BackdropProvider from "../components/backdrop";
 import "./globals.css";
 import QueryProvider from "../utils/queryProvider";
+import { StoreProvider } from "../stores/storeProvider";
 
 const notoSansKr = Noto_Sans_KR({
   preload: true,
@@ -23,9 +24,11 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={notoSansKr.className}>
-        <QueryProvider>
-          <BackdropProvider>{children}</BackdropProvider>
-        </QueryProvider>
+        <StoreProvider>
+          <QueryProvider>
+            <BackdropProvider>{children}</BackdropProvider>
+          </QueryProvider>
+        </StoreProvider>
       </body>
     </html>
   );

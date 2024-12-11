@@ -18,7 +18,7 @@ import * as React from "react";
 import { NavPages } from "./navPages";
 import { NavUser } from "./navUser";
 import { NavWorkSpace } from "./navWorkspace";
-import useDataStore, { createDataStore } from "@/src/stores/useStore";
+import { useDataStore } from "@/src/stores/storeProvider";
 
 const data = {
   user: {
@@ -106,7 +106,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const globalUser = useDataStore(createDataStore, (state) => state.user);
+  const { user: globalUser } = useDataStore((state) => state);
 
   return (
     <Sidebar collapsible="icon" {...props} className="select-none">
