@@ -42,7 +42,7 @@ const FormSignin = ({ step, formSet }: Props) => {
     switch (code) {
       case SIGNIN_SUCCESS:
         const userData = responseData.data as User;
-        console.log(userData);
+        console.log("User: ", userData);
         router.push("/");
         break;
       default:
