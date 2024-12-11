@@ -2,7 +2,7 @@
 
 import { type ReactNode, createContext, useRef, useContext } from "react";
 import { useStore } from "zustand";
-import { createDataStore, type DataStore } from "./useStore";
+import { createDataStore, type DataStore } from "./store";
 
 export type StoreApi = ReturnType<typeof createDataStore>;
 
