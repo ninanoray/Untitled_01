@@ -21,7 +21,7 @@ import { LOGIN_STEP_PASSWORD } from "./formSetLogin";
 import { LoginFormSet, signinFormSchema } from "./loginFormSchema";
 import { useRouter } from "next/navigation";
 import { User } from "@/src/types/type";
-import { createDataStore } from "@/src/stores/useStore";
+import { useDataStore } from "@/src/stores/storeProvider";
 
 type Props = {
   formSet: LoginFormSet;
@@ -29,7 +29,7 @@ type Props = {
 };
 
 const FormSignin = ({ step, formSet }: Props) => {
-  const setGlobalUser = createDataStore((state) => state.setUser);
+  const { setUser: setGlobalUser } = useDataStore((state) => state);
 
   const router = useRouter();
 
