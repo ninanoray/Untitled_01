@@ -29,7 +29,7 @@ type Props = {
 };
 
 const FormSignin = ({ step, formSet }: Props) => {
-  const { setUser: setGlobalUser } = useDataStore((state) => state);
+  const { user: globalUser } = useDataStore((state) => state);
 
   const router = useRouter();
 
@@ -45,7 +45,7 @@ const FormSignin = ({ step, formSet }: Props) => {
     switch (code) {
       case SIGNIN_SUCCESS:
         const userData = responseData.data as User;
-        setGlobalUser(userData);
+        globalUser.setData(userData);
         router.push("/");
         break;
       default:
