@@ -18,13 +18,9 @@ import * as React from "react";
 import { NavPages } from "./navPages";
 import { NavUser } from "./navUser";
 import { NavWorkSpace } from "./navWorkspace";
+import { useDataStore } from "@/src/stores/storeProvider";
 
 const data = {
-  user: {
-    name: "무제",
-    email: "untitled_01@gmail.com",
-    avatar: "https://github.com/shadcn.png",
-  },
   workspaces: [
     {
       name: "워크스페이스 1",
@@ -105,6 +101,8 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user: globalUser } = useDataStore((state) => state);
+
   return (
     <Sidebar collapsible="icon" {...props} className="select-none">
       <SidebarHeader>
@@ -115,7 +113,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavPages label="페이지" pages={data.pages} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={globalUser} />
       </SidebarFooter>
       {/* <SidebarRail /> */}
     </Sidebar>
