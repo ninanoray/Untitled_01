@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { QueryKey, setLogger, useMutation, useQueryClient } from "react-query";
+import { QueryKey, useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 
 export const queryKeys = {
@@ -20,22 +20,16 @@ export type APIResponse = {
 
 export default function useOptimisticMutation(
   apiAxios: (body: z.infer<z.Schema>) => Promise<any>,
-  queryKeys: QueryKey
+  queryKeys: string[]
 ) {
   const queryClient = useQueryClient();
   return useMutation<AxiosResponse, AxiosError, z.infer<z.Schema>>({
     mutationFn: (body) => {
-      // console log 출력 관리
-      setLogger({
-        log: () => {},
-        warn: () => {},
-        error: () => {},
-      });
       return apiAxios(body);
     },
     onMutate: async (variable) => {
       // onMutate에서 수행되는 것들을 덮어쓰지 않기 위해 요청한 쿼리를 취소
-      await queryClient.cancelQueries(queryKeys);
+      await queryClient.cancelQueries({ queryKey: queryKeys, exact: true });
       // 기존 Query를 가져오기(존재하지 않으면 undefinde 반환)
       const previous = queryClient.getQueryData(queryKeys);
       if (previous) {
@@ -56,7 +50,11 @@ export default function useOptimisticMutation(
     },
     onSettled: () => {
       // mutation이 끝나면 (성공유무 상관없이) 쿼리를 무효화 처리하고 새로 가져온다.
-      queryClient.invalidateQueries(queryKeys);
+      queryClient.invalidateQueries({
+        queryKey: queryKeys,
+        exact: true,
+        refetchType: "active",
+      });
     },
   });
 }

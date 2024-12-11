@@ -23,7 +23,11 @@ import axiosInstance from "@/src/lib/apiAxiosInterceptors";
 import { AxiosResponse, AxiosError } from "axios";
 import { z } from "zod";
 import { emailFormSchema, LoginFormSet } from "./loginFormSchema";
-import { STEP_PASSWORD, STEP_PIN, STEP_INIT } from "./formSetLogin";
+import {
+  LOGIN_STEP_PASSWORD,
+  LOGIN_STEP_PIN,
+  LOGIN_STEP_INIT,
+} from "./formSetLogin";
 import { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 
@@ -47,7 +51,7 @@ const FormEmail = ({ formSet, step, setStep }: Props) => {
     const code = responseData.code;
     switch (code) {
       case EMAIL_LOGIN:
-        setStep(STEP_PASSWORD);
+        setStep(LOGIN_STEP_PASSWORD);
         break;
       default:
         break;
@@ -63,17 +67,18 @@ const FormEmail = ({ formSet, step, setStep }: Props) => {
         router.push("/auth/signup");
         break;
       case EMAIL_NEW:
-        setStep(STEP_PIN);
+        setStep(LOGIN_STEP_PIN);
         break;
       case EMAIL_BLOCKED:
         alert("비활성화 유저");
-        setStep(STEP_INIT);
+        setStep(LOGIN_STEP_INIT);
         break;
       default:
         break;
     }
   };
 
+  const key = queryKeys.emailController.email();
   const { mutate: checkEmailMutate } = useOptimisticMutation(
     checkEmail,
     queryKeys.emailController.email()
@@ -100,23 +105,24 @@ const FormEmail = ({ formSet, step, setStep }: Props) => {
                 <Input
                   placeholder="이메일 주소를 입력하세요"
                   onInput={() => {
-                    setStep(STEP_INIT);
+                    setStep(LOGIN_STEP_INIT);
                     formSet.signin.resetField("password");
                     formSet.pin.resetField("pin");
                   }}
                   {...field}
                 />
               </FormControl>
-              {!formSet.email.formState.errors.email && step === STEP_INIT && (
-                <FormDescription>
-                  팀원과 쉽게 협업하려면 조직 이메일을 사용하세요.
-                </FormDescription>
-              )}
+              {!formSet.email.formState.errors.email &&
+                step === LOGIN_STEP_INIT && (
+                  <FormDescription>
+                    팀원과 쉽게 협업하려면 조직 이메일을 사용하세요.
+                  </FormDescription>
+                )}
               <FormMessage />
             </FormItem>
           )}
         />
-        {step === STEP_INIT && (
+        {step === LOGIN_STEP_INIT && (
           <Button type="submit" className="w-full">
             계속
           </Button>
