@@ -21,10 +21,9 @@ export const createDataStore = (initState: States = initialDataState) => {
         (set) => ({
           ...initState,
           setUser: (data) =>
-            set((state) => ({
-              ...state,
+            set({
               user: data,
-            })),
+            }),
           reset: () => set(initialDataState as DataStore),
         }),
         {
