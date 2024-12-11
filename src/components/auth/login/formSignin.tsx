@@ -21,6 +21,7 @@ import { LOGIN_STEP_PASSWORD } from "./formSetLogin";
 import { LoginFormSet, signinFormSchema } from "./loginFormSchema";
 import { useRouter } from "next/navigation";
 import { User } from "@/src/types/type";
+import { createDataStore } from "@/src/stores/useStore";
 
 type Props = {
   formSet: LoginFormSet;
@@ -28,6 +29,8 @@ type Props = {
 };
 
 const FormSignin = ({ step, formSet }: Props) => {
+  const setGlobalUser = createDataStore((state) => state.setUser);
+
   const router = useRouter();
 
   // 로그인(비밀번호 입력) 요청
@@ -42,7 +45,7 @@ const FormSignin = ({ step, formSet }: Props) => {
     switch (code) {
       case SIGNIN_SUCCESS:
         const userData = responseData.data as User;
-        console.log("User: ", userData);
+        setGlobalUser(userData);
         router.push("/");
         break;
       default:

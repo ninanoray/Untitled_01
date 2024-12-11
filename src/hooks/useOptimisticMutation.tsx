@@ -24,9 +24,7 @@ export default function useOptimisticMutation(
 ) {
   const queryClient = useQueryClient();
   return useMutation<AxiosResponse, AxiosError, z.infer<z.Schema>>({
-    mutationFn: (body) => {
-      return apiAxios(body);
-    },
+    mutationFn: apiAxios,
     onMutate: async (variable) => {
       // onMutate에서 수행되는 것들을 덮어쓰지 않기 위해 요청한 쿼리를 취소
       await queryClient.cancelQueries({ queryKey: queryKeys, exact: true });
@@ -41,7 +39,7 @@ export default function useOptimisticMutation(
       }
       return { previous: previous };
     },
-    onError: (error: AxiosError, _, context) => {
+    onError: (error, variables, context) => {
       const errorContext = context as { previous: any };
       if (errorContext.previous) {
         // onMutate에서 반환된 값으로 다시 롤백

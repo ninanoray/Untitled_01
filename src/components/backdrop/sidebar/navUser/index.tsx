@@ -4,15 +4,10 @@ import { DropdownMenu } from "@/src/components/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuItem } from "@/src/components/ui/sidebar";
 import DropdownUserContent from "./dropdownUserContent";
 import DropdownUserTrigger from "./dropdownUserTrigger";
-
-export interface User {
-  name: string;
-  email: string;
-  avatar: string;
-}
+import { User } from "@/src/types/type";
 
 type Props = {
-  user: User;
+  user: User | undefined;
 };
 
 export function NavUser({ user }: Props) {
