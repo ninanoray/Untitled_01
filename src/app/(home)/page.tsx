@@ -12,10 +12,10 @@ const breadcrumbs = {
 export default async function Home() {
   const queryClient = new QueryClient();
   //prefetchQuery를 통해 데이터를 비동기로 prefetch, 데이터는 QueryClient에 캐싱
-  await queryClient.prefetchQuery({
-    queryKey: ["main"],
-    queryFn: () => {},
-  });
+  // await queryClient.prefetchQuery({
+  //   queryKey: ["main"],
+  //   queryFn: () => {},
+  // });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

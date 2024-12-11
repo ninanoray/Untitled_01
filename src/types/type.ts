@@ -6,4 +6,5 @@ export type User = {
   password: string;
   nickname: string;
   status: string;
+  avatar?: string;
 };
