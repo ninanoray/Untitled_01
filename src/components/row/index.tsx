@@ -1,3 +1,4 @@
+import { tm } from "@/src/lib/tailwindMerge";
 import { marked } from "marked";
 import {
   Dispatch,
@@ -8,7 +9,6 @@ import {
   useState,
 } from "react";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
-import { twMerge } from "tailwind-merge";
 
 type Props = {
   id: number;
@@ -180,17 +180,10 @@ const Row = ({ id, data, setData }: Props) => {
         onChange={onChangeContents}
         onKeyDown={(e) => handleKeydown(e, id)}
         placeholder={"글을 작성하거나 마크다운 텍스트를 입력하세요"}
-        className={twMerge(
+        className={tm(
           `w-full space-y-2`,
           innerHtml
-            ? twMerge(
-                hrStyle,
-                ulStyle,
-                olStyle,
-                liStyle,
-                codeStyle,
-                blockquoteStyle
-              )
+            ? tm(hrStyle, ulStyle, olStyle, liStyle, codeStyle, blockquoteStyle)
             : placeholderStyle
         )}
       />
