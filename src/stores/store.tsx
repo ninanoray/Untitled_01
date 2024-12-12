@@ -12,7 +12,7 @@ interface Actions {
 }
 export type DataStore = States & Actions;
 
-const initialDataState: States = { user: undefined }; 
+const initialDataState: States = { user: undefined };
 
 export const createDataStore = (initState: States = initialDataState) => {
   return createStore<DataStore>()(

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "@/src/lib/tailwindMerge";
+import { tm } from "@/src/lib/tailwindMerge";
 
 const Textarea = React.forwardRef<
   HTMLTextAreaElement,
@@ -8,7 +8,7 @@ const Textarea = React.forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <textarea
-      className={cn(
+      className={tm(
         "flex w-full rounded-md border-none bg-background px-3 py-2 text-base placeholder:text-gray-300 focus-visible:outline-none resize-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
         className
       )}

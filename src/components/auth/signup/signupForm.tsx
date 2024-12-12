@@ -13,11 +13,11 @@ import {
   FormMessage,
 } from "../../ui/form";
 import { Input } from "../../ui/input";
-import InputImage from "./inputImage";
 import { signupFormSchema } from "./signupFormSchema";
+import InputImage from "./inputImage";
 
 const SignupForm = () => {
-  const [preview, setPreview] = useState("");
+  const [image, setImage] = useState<string>("");
 
   const router = useRouter();
 
@@ -43,8 +43,8 @@ const SignupForm = () => {
         >
           <InputImage
             control={formSignup.control}
-            preview={preview}
-            setPreview={setPreview}
+            image={image}
+            setImage={setImage}
           />
           <FormField
             control={formSignup.control}

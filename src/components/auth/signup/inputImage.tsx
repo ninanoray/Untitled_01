@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import { Control } from "react-hook-form";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import {
@@ -9,6 +9,7 @@ import {
   FormMessage,
 } from "../../ui/form";
 import { Input } from "../../ui/input";
+import ImageCrop from "../../imageCrop";
 
 type Props = {
   control:
@@ -18,23 +19,22 @@ type Props = {
         image?: File;
       }>
     | undefined;
-  preview: string;
-  setPreview: Dispatch<SetStateAction<string>>;
+  image: string;
+  setImage: Dispatch<SetStateAction<string>>;
 };
 
-const InputImage = ({ control, preview, setPreview }: Props) => {
+const InputImage = ({ control, image, setImage }: Props) => {
   function getImageData(event: ChangeEvent<HTMLInputElement>) {
-    // FileList is immutable, so we need to create a new one
     const dataTransfer = new DataTransfer();
-
-    // Add newly uploaded images
-    Array.from(event.target.files!).forEach((image) =>
-      dataTransfer.items.add(image)
-    );
-
     const files = dataTransfer.files;
-    const displayUrl = URL.createObjectURL(event.target.files![0]);
 
+    let displayUrl = "";
+    const fileList = event.target.files;
+    if (fileList && fileList.length > 0) {
+      // Add newly uploaded images
+      Array.from(fileList).forEach((image) => dataTransfer.items.add(image));
+      displayUrl = URL.createObjectURL(fileList[0]);
+    }
     return { files, displayUrl };
   }
 
@@ -42,32 +42,36 @@ const InputImage = ({ control, preview, setPreview }: Props) => {
     <FormField
       control={control}
       name="image"
-      render={({ field: { onChange, value, ...rest } }) => (
-        <FormItem className="mt-10 mb-8 flex-center flex-col">
-          <FormLabel className="cursor-pointer rounded-full">
-            <Avatar className="size-32">
-              <AvatarImage src={preview} />
-              <AvatarFallback className="text-gray-500 hover:text-black trans-200">
-                사진 추가
-              </AvatarFallback>
-            </Avatar>
-          </FormLabel>
-          <FormControl>
-            <Input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(event) => {
-                const { files, displayUrl } = getImageData(event);
-                setPreview(displayUrl);
-                onChange(files[0]);
-              }}
-              {...rest}
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
+      render={({ field: { onChange, value, ...rest } }) => {
+        return (
+          <FormItem className="mt-10 mb-8 flex-center flex-col">
+            <ImageCrop image={image} setImage={setImage} aspect={1}>
+              <FormLabel className="cursor-pointer rounded-full">
+                <Avatar className="size-32">
+                  <AvatarImage src={image} />
+                  <AvatarFallback className="text-gray-500 hover:text-black trans-200">
+                    사진 추가
+                  </AvatarFallback>
+                </Avatar>
+              </FormLabel>
+            </ImageCrop>
+            <FormControl>
+              <Input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(event) => {
+                  const { files, displayUrl } = getImageData(event);
+                  setImage(displayUrl);
+                  onChange(files[0]);
+                }}
+                {...rest}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        );
+      }}
     />
   );
 };
