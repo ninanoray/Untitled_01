@@ -12,7 +12,6 @@ import React, {
 } from "react";
 import ReactCrop, {
   centerCrop,
-  convertToPixelCrop,
   makeAspectCrop,
   type Crop,
   type PixelCrop,
@@ -55,8 +54,8 @@ const ImageCrop = ({ image, setImage, aspect, children }: Props) => {
       makeAspectCrop(
         {
           unit: "%",
-          width: 75,
-          height: 75,
+          width: 100,
+          height: 100,
         },
         aspect,
         mediaWidth,
@@ -130,8 +129,8 @@ const ImageCrop = ({ image, setImage, aspect, children }: Props) => {
       }}
     >
       <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent className="p-0 gap-0">
-        <div className="p-6 size-full">
+      <DialogContent className="max-w-[80vw] p-0 gap-0">
+        <div className="justify-self-center p-12 pb-0">
           <ReactCrop
             crop={crop}
             onChange={(_, percentCrop) => {
@@ -141,23 +140,23 @@ const ImageCrop = ({ image, setImage, aspect, children }: Props) => {
               onCropComplete(crop);
             }}
             aspect={aspect}
-            className="w-full"
           >
-            <Avatar className="size-full rounded-none">
+            <Avatar>
               <AvatarImage
                 ref={imgRef}
-                className="size-full rounded-none "
+                className="max-h-[75vh] object-cover object-center"
                 alt="image preview"
                 src={preview}
+                sizes="50vw"
                 onLoad={onImageLoad}
               />
-              <AvatarFallback className="size-full min-h-[460px] rounded-none">
+              <AvatarFallback className="min-h-[460px]">
                 Loading...
               </AvatarFallback>
             </Avatar>
           </ReactCrop>
         </div>
-        <DialogFooter className="p-6 pt-0 justify-center ">
+        <DialogFooter className="p-3">
           <Button type="submit" size={"sm"} className="w-fit" onClick={onCrop}>
             <CropIcon className="mr-1.5 size-4" />
             자르기
