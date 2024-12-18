@@ -23,10 +23,12 @@ import {
   DialogClose,
   DialogContent,
   DialogFooter,
+  DialogHeader,
   DialogTrigger,
 } from "../ui/dialog";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { Button } from "../ui/button";
+import { useIsMobile } from "@/src/hooks/use-mobile";
 
 interface Props {
   image: string;
@@ -36,6 +38,8 @@ interface Props {
 }
 
 const ImageCrop = ({ image, setImage, aspect, children }: Props) => {
+  const isMobile = useIsMobile();
+
   const imgRef = useRef<HTMLImageElement>(null);
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -119,6 +123,10 @@ const ImageCrop = ({ image, setImage, aspect, children }: Props) => {
     if (image) setPreview(image);
   }, [image]);
 
+  const contentStyle = "max-w-[80vw] w-fit min-w-[40vw] p-0 gap-0";
+  const mobileContentStyle =
+    "w-[80dvw] p-0 gap-0 rounded-lg left-[50dvw] top-[50dvh]";
+
   return (
     <Dialog
       open={preview === image && dialogOpen}
@@ -126,10 +134,11 @@ const ImageCrop = ({ image, setImage, aspect, children }: Props) => {
         setDialogOpen(open);
         setCrop(undefined);
         setPreview(undefined);
+        setImage("");
       }}
     >
-      <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent className="max-w-[80vw] p-0 gap-0">
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className={isMobile ? mobileContentStyle : contentStyle}>
         <div className="justify-self-center p-12 pb-0">
           <ReactCrop
             crop={crop}
@@ -156,7 +165,7 @@ const ImageCrop = ({ image, setImage, aspect, children }: Props) => {
             </Avatar>
           </ReactCrop>
         </div>
-        <DialogFooter className="p-3">
+        <DialogFooter className="p-3 flex justify-end">
           <Button type="submit" size={"sm"} className="w-fit" onClick={onCrop}>
             <CropIcon className="mr-1.5 size-4" />
             자르기

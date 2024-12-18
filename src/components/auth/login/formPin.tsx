@@ -34,6 +34,7 @@ type Props = {
 
 const FormPin = ({ step, formSet }: Props) => {
   const [pinCount, setPinCount] = useState<number>(30);
+  const [pin, setPin] = useState<string>();
 
   const router = useRouter();
 
@@ -48,6 +49,7 @@ const FormPin = ({ step, formSet }: Props) => {
     switch (code) {
       case SENDPIN_SUCCESS:
         alert("인증번호를 전송했습니다. 이메일을 확인해주세요.");
+        setPin(responseData.data);
         setPinCount(30);
         formSet.pin.resetField("pin");
         break;
@@ -58,7 +60,8 @@ const FormPin = ({ step, formSet }: Props) => {
 
   function onSubmitPin(values: z.infer<typeof pinFormSchema>) {
     console.log(values);
-    router.push("/auth/signup");
+    if (pin && values.pin === pin) router.push("/auth/signup");
+    else alert("인증번호가 올바르지 않습니다.");
   }
 
   const {
