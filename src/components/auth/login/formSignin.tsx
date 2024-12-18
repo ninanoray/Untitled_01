@@ -65,10 +65,8 @@ const FormSignin = ({ step, formSet }: Props) => {
     }
   };
 
-  const { mutate: signinMutate } = useOptimisticMutation(
-    signin,
-    queryKeys.signinController.signin()
-  );
+  const key = queryKeys.signinController.signin();
+  const { mutate: signinMutate } = useOptimisticMutation(signin, key);
 
   if (step === LOGIN_STEP_PASSWORD)
     return (

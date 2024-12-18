@@ -79,10 +79,7 @@ const FormEmail = ({ formSet, step, setStep }: Props) => {
   };
 
   const key = queryKeys.emailController.email();
-  const { mutate: checkEmailMutate } = useOptimisticMutation(
-    checkEmail,
-    queryKeys.emailController.email()
-  );
+  const { mutate: checkEmailMutate } = useOptimisticMutation(checkEmail, key);
 
   return (
     <Form {...formSet.email}>
