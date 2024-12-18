@@ -12,6 +12,9 @@
   .screen {
     @apply w-screen h-screen;
   }
+  .mscreen {
+    @apply w-dvw h-dvh;
+  }
   .trans-300 {
     @apply transition-all duration-300;
   }

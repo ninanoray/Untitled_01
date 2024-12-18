@@ -12,9 +12,20 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "../../ui/input-otp";
 import { LOGIN_STEP_PIN } from "./formSetLogin";
 import { Button } from "../../ui/button";
 import { useRouter } from "next/navigation";
-import { LoginFormSet, pinFormSchema } from "./loginFormSchema";
+import {
+  emailFormSchema,
+  LoginFormSet,
+  pinFormSchema,
+} from "./loginFormSchema";
 import { z } from "zod";
 import { useEffect, useState } from "react";
+import useOptimisticMutation, {
+  APIResponse,
+} from "@/src/hooks/useOptimisticMutation";
+import axiosInstance from "@/src/lib/apiAxiosInterceptors";
+import { SENDPIN_SUCCESS } from "@/src/constant/apiResponseCode";
+import { AxiosResponse } from "axios";
+import { Loader2 } from "lucide-react";
 
 type Props = {
   formSet: LoginFormSet;
@@ -23,26 +34,60 @@ type Props = {
 
 const FormPin = ({ step, formSet }: Props) => {
   const [pinCount, setPinCount] = useState<number>(30);
+  const [pin, setPin] = useState<string>();
 
   const router = useRouter();
 
+  // 인증 번호 이메일 전송 요청
+  async function askPin(body: z.infer<typeof emailFormSchema>) {
+    const response = await axiosInstance.post("/api/mail/auth-code", body);
+    return response.data;
+  }
+  const handleSendPinSuccess = (data: AxiosResponse<any, any>) => {
+    const responseData = data as APIResponse;
+    const code = responseData.code;
+    switch (code) {
+      case SENDPIN_SUCCESS:
+        alert("인증번호를 전송했습니다. 이메일을 확인해주세요.");
+        setPin(responseData.data);
+        setPinCount(30);
+        formSet.pin.resetField("pin");
+        break;
+      default:
+        break;
+    }
+  };
+
   function onSubmitPin(values: z.infer<typeof pinFormSchema>) {
     console.log(values);
-    router.push("/auth/signup");
+    if (pin && values.pin === pin) router.push("/auth/signup");
+    else alert("인증번호가 올바르지 않습니다.");
   }
+
+  const {
+    mutate: askPinMutate,
+    isPending,
+    isSuccess,
+  } = useOptimisticMutation(askPin, []);
 
   // 핀 재전송 카운트 다운
   useEffect(() => {
     if (step === LOGIN_STEP_PIN) {
-      const id = setInterval(() => {
-        setPinCount((count) => count - 1);
-      }, 1000);
-      if (pinCount <= 0) {
-        clearInterval(id);
+      if (isSuccess && !isPending) {
+        const id = setInterval(() => {
+          setPinCount((count) => count - 1);
+        }, 1000);
+        if (pinCount <= 0) {
+          clearInterval(id);
+        }
+        return () => clearInterval(id);
+      } else if (!isSuccess && !isPending) {
+        askPinMutate(formSet.email.getValues(), {
+          onSuccess: (res) => handleSendPinSuccess(res),
+        });
       }
-      return () => clearInterval(id);
     }
-  }, [step, pinCount]);
+  }, [step, pinCount, isSuccess, askPinMutate, formSet.email, isPending]);
 
   if (step === LOGIN_STEP_PIN)
     return (
@@ -77,14 +122,20 @@ const FormPin = ({ step, formSet }: Props) => {
                   <FormDescription>
                     수신함으로 인증번호를 보내드렸습니다.
                   </FormDescription>
-                  {pinCount > 0 ? (
+                  {isPending ? (
+                    <div className="flex gap-1 items-center text-sm text-gray-500">
+                      전송중
+                      <Loader2 className="size-4 animate-spin" />
+                    </div>
+                  ) : pinCount > 0 ? (
                     <div className="text-sm text-gray-500">{` ${pinCount}초 후에 다시 보내기.`}</div>
                   ) : (
                     <div
                       className="text-sm text-blue-600 cursor-pointer"
                       onClick={() => {
-                        setPinCount(30);
-                        formSet.pin.resetField("pin");
+                        askPinMutate(formSet.email.getValues(), {
+                          onSuccess: (res) => handleSendPinSuccess(res),
+                        });
                       }}
                     >
                       다시 보내기

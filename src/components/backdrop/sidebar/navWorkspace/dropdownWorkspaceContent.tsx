@@ -7,7 +7,6 @@ import {
 } from "@/src/components/ui/dropdown-menu";
 import { useSidebar } from "@/src/components/ui/sidebar";
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 import { Workspace } from ".";
 
@@ -18,8 +17,6 @@ type Props = {
 
 const DropdownWorkspaceContent = ({ workspaces, handleClick }: Props) => {
   const { isMobile } = useSidebar();
-
-  const router = useRouter();
 
   return (
     <DropdownMenuContent
@@ -34,16 +31,14 @@ const DropdownWorkspaceContent = ({ workspaces, handleClick }: Props) => {
       {workspaces.map((workspace, index) => (
         <DropdownMenuItem
           key={workspace.name}
-          onClick={() => {
-            handleClick(workspace);
-            router.push("/");
-          }}
-          className="gap-2 p-2 cursor-pointer"
+          onClick={() => handleClick(workspace)}
         >
-          <div className="flex size-6 items-center justify-center rounded-sm border">
-            <workspace.logo className="size-4 shrink-0" />
-          </div>
-          {workspace.name}
+          <a href={"/"} className="flex gap-2 cursor-pointer">
+            <div className="flex size-6 items-center justify-center rounded-sm border">
+              <workspace.logo className="size-4 shrink-0" />
+            </div>
+            {workspace.name}
+          </a>
           <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
         </DropdownMenuItem>
       ))}

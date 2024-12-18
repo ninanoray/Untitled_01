@@ -12,7 +12,6 @@ import React, {
 } from "react";
 import ReactCrop, {
   centerCrop,
-  convertToPixelCrop,
   makeAspectCrop,
   type Crop,
   type PixelCrop,
@@ -24,10 +23,12 @@ import {
   DialogClose,
   DialogContent,
   DialogFooter,
+  DialogHeader,
   DialogTrigger,
 } from "../ui/dialog";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { Button } from "../ui/button";
+import { useIsMobile } from "@/src/hooks/use-mobile";
 
 interface Props {
   image: string;
@@ -37,6 +38,8 @@ interface Props {
 }
 
 const ImageCrop = ({ image, setImage, aspect, children }: Props) => {
+  const isMobile = useIsMobile();
+
   const imgRef = useRef<HTMLImageElement>(null);
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -55,8 +58,8 @@ const ImageCrop = ({ image, setImage, aspect, children }: Props) => {
       makeAspectCrop(
         {
           unit: "%",
-          width: 75,
-          height: 75,
+          width: 100,
+          height: 100,
         },
         aspect,
         mediaWidth,
@@ -120,6 +123,10 @@ const ImageCrop = ({ image, setImage, aspect, children }: Props) => {
     if (image) setPreview(image);
   }, [image]);
 
+  const contentStyle = "max-w-[80vw] w-fit min-w-[40vw] p-0 gap-0";
+  const mobileContentStyle =
+    "w-[80dvw] p-0 gap-0 rounded-lg left-[50dvw] top-[50dvh]";
+
   return (
     <Dialog
       open={preview === image && dialogOpen}
@@ -127,11 +134,12 @@ const ImageCrop = ({ image, setImage, aspect, children }: Props) => {
         setDialogOpen(open);
         setCrop(undefined);
         setPreview(undefined);
+        setImage("");
       }}
     >
-      <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent className="p-0 gap-0">
-        <div className="p-6 size-full">
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className={isMobile ? mobileContentStyle : contentStyle}>
+        <div className="justify-self-center p-12 pb-0">
           <ReactCrop
             crop={crop}
             onChange={(_, percentCrop) => {
@@ -141,23 +149,23 @@ const ImageCrop = ({ image, setImage, aspect, children }: Props) => {
               onCropComplete(crop);
             }}
             aspect={aspect}
-            className="w-full"
           >
-            <Avatar className="size-full rounded-none">
+            <Avatar>
               <AvatarImage
                 ref={imgRef}
-                className="size-full rounded-none "
+                className="max-h-[75vh] object-cover object-center"
                 alt="image preview"
                 src={preview}
+                sizes="50vw"
                 onLoad={onImageLoad}
               />
-              <AvatarFallback className="size-full min-h-[460px] rounded-none">
+              <AvatarFallback className="min-h-[460px]">
                 Loading...
               </AvatarFallback>
             </Avatar>
           </ReactCrop>
         </div>
-        <DialogFooter className="p-6 pt-0 justify-center ">
+        <DialogFooter className="p-3 flex justify-end">
           <Button type="submit" size={"sm"} className="w-fit" onClick={onCrop}>
             <CropIcon className="mr-1.5 size-4" />
             자르기

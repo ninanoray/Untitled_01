@@ -1,4 +1,10 @@
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useState,
+} from "react";
 import { Control } from "react-hook-form";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import {
@@ -64,6 +70,7 @@ const InputImage = ({ control, image, setImage }: Props) => {
                   const { files, displayUrl } = getImageData(event);
                   setImage(displayUrl);
                   onChange(files[0]);
+                  event.target.value = "";
                 }}
                 {...rest}
               />

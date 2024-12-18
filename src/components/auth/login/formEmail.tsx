@@ -28,7 +28,7 @@ import {
   LOGIN_STEP_PIN,
   LOGIN_STEP_INIT,
 } from "./formSetLogin";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, HTMLInputTypeAttribute, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 
 type Props = {
@@ -79,10 +79,7 @@ const FormEmail = ({ formSet, step, setStep }: Props) => {
   };
 
   const key = queryKeys.emailController.email();
-  const { mutate: checkEmailMutate } = useOptimisticMutation(
-    checkEmail,
-    queryKeys.emailController.email()
-  );
+  const { mutate: checkEmailMutate } = useOptimisticMutation(checkEmail, key);
 
   return (
     <Form {...formSet.email}>
@@ -103,6 +100,7 @@ const FormEmail = ({ formSet, step, setStep }: Props) => {
               <FormLabel>이메일</FormLabel>
               <FormControl>
                 <Input
+                  type={"email" as HTMLInputTypeAttribute}
                   placeholder="이메일 주소를 입력하세요"
                   onInput={() => {
                     setStep(LOGIN_STEP_INIT);

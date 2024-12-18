@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { QueryKey, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 
 export const queryKeys = {
