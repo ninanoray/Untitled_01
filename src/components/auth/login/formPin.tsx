@@ -1,31 +1,31 @@
+import { SENDPIN_SUCCESS } from "@/src/constant/apiResponseCode";
+import useOptimisticMutation, {
+  APIResponse,
+} from "@/src/hooks/useOptimisticMutation";
+import axiosInstance from "@/src/lib/apiAxiosInterceptors";
+import { AxiosResponse } from "axios";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { z } from "zod";
+import { Button } from "../../ui/button";
 import {
+  Form,
+  FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
-  FormDescription,
   FormMessage,
-  Form,
 } from "../../ui/form";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "../../ui/input-otp";
 import { LOGIN_STEP_PIN } from "./formSetLogin";
-import { Button } from "../../ui/button";
-import { useRouter } from "next/navigation";
 import {
   emailFormSchema,
   LoginFormSet,
   pinFormSchema,
 } from "./loginFormSchema";
-import { z } from "zod";
-import { useEffect, useState } from "react";
-import useOptimisticMutation, {
-  APIResponse,
-} from "@/src/hooks/useOptimisticMutation";
-import axiosInstance from "@/src/lib/apiAxiosInterceptors";
-import { SENDPIN_SUCCESS } from "@/src/constant/apiResponseCode";
-import { AxiosResponse } from "axios";
-import { Loader2 } from "lucide-react";
 
 type Props = {
   formSet: LoginFormSet;
@@ -34,7 +34,6 @@ type Props = {
 
 const FormPin = ({ step, formSet }: Props) => {
   const [pinCount, setPinCount] = useState<number>(30);
-  const [pin, setPin] = useState<string>();
 
   const router = useRouter();
 
@@ -43,32 +42,42 @@ const FormPin = ({ step, formSet }: Props) => {
     const response = await axiosInstance.post("/api/mail/auth-code", body);
     return response.data;
   }
-  const handleSendPinSuccess = (data: AxiosResponse<any, any>) => {
-    const responseData = data as APIResponse;
-    const code = responseData.code;
-    switch (code) {
-      case SENDPIN_SUCCESS:
-        alert("인증번호를 전송했습니다. 이메일을 확인해주세요.");
-        setPin(responseData.data);
-        setPinCount(30);
-        formSet.pin.resetField("pin");
-        break;
-      default:
-        break;
-    }
-  };
 
-  function onSubmitPin(values: z.infer<typeof pinFormSchema>) {
-    console.log(values);
-    if (pin && values.pin === pin) router.push("/auth/signup");
-    else alert("인증번호가 올바르지 않습니다.");
-  }
+  const handleSendPinSuccess = useCallback(
+    (data: AxiosResponse<any, any>) => {
+      const responseData = data as APIResponse;
+      const code = responseData.code;
+      switch (code) {
+        case SENDPIN_SUCCESS:
+          alert("인증번호를 전송했습니다. 이메일을 확인해주세요.");
+          setPinCount(30);
+          formSet.pin.resetField("pin");
+          break;
+        default:
+          break;
+      }
+      return code;
+    },
+    [formSet.pin]
+  );
 
+  const key = [];
   const {
     mutate: askPinMutate,
     isPending,
     isSuccess,
-  } = useOptimisticMutation(askPin, []);
+  } = useOptimisticMutation(askPin, key);
+
+  const askPinWithCallback = useCallback(() => {
+    askPinMutate(formSet.email.getValues(), {
+      onSuccess: (res) => handleSendPinSuccess(res),
+    });
+  }, [askPinMutate, formSet.email, handleSendPinSuccess]);
+
+  function onSubmitPin(values: z.infer<typeof pinFormSchema>) {
+    console.log(values);
+    router.push("/auth/signup");
+  }
 
   // 핀 재전송 카운트 다운
   useEffect(() => {
@@ -82,12 +91,10 @@ const FormPin = ({ step, formSet }: Props) => {
         }
         return () => clearInterval(id);
       } else if (!isSuccess && !isPending) {
-        askPinMutate(formSet.email.getValues(), {
-          onSuccess: (res) => handleSendPinSuccess(res),
-        });
+        askPinWithCallback();
       }
     }
-  }, [step, pinCount, isSuccess, askPinMutate, formSet.email, isPending]);
+  }, [askPinWithCallback, isPending, isSuccess, pinCount, step]);
 
   if (step === LOGIN_STEP_PIN)
     return (
