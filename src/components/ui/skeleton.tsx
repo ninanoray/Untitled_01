@@ -1,4 +1,4 @@
-import { tm } from "@/src/lib/tailwindMerge";
+import { cn } from "@/src/lib/tailwindMerge";
 
 function Skeleton({
   className,
@@ -6,7 +6,7 @@ function Skeleton({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={tm("animate-pulse rounded-md bg-muted", className)}
+      className={cn("animate-pulse rounded-md bg-muted", className)}
       {...props}
     />
   );

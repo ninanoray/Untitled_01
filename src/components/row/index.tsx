@@ -1,4 +1,3 @@
-import { tm } from "@/src/lib/tailwindMerge";
 import { marked } from "marked";
 import {
   Dispatch,
@@ -8,7 +7,8 @@ import {
   useEffect,
   useState,
 } from "react";
-import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
+import { ContentEditableEvent } from "react-contenteditable";
+import MarkdownContenteditable from "./MarkdownContenteditable";
 
 type Props = {
   id: number;
@@ -18,14 +18,6 @@ type Props = {
 
 const ADDROW = "Add";
 const DELETEROW = "DEL";
-
-export const TypographyClassname = [
-  "prose prose-sm dark:prose-invert max-w-none",
-  "prose-p:m-0 prose-p:p-0",
-  "prose-ul:m-0 prose-ol:m-0",
-  "prose-li:m-0 prose-li:p-0 prose-li:marker:text-foreground/80",
-  "prose-hr:mt-[0.9em] prose-hr:mb-[0.5em] prose-hr:border-foreground/50",
-];
 
 const Row = ({ id, data, setData }: Props) => {
   const innerHtml: string | undefined = data[id];
@@ -37,6 +29,9 @@ const Row = ({ id, data, setData }: Props) => {
     },
     [data, id, setData]
   );
+
+  const [tag, setTag] = useState<string>("p");
+  const DEFAULT_TAG = "p";
   const [keycode, setKeyCode] = useState("");
 
   // string html 태그에 속성 추가
@@ -46,64 +41,57 @@ const Row = ({ id, data, setData }: Props) => {
       : "";
   };
 
-  // html tag 이름 가져오기, 괄호와 속성 제외
-  const getHTMLtagName = (html: string) => {
-    const regexFirstTag = /<[^>]*>?/; // html 첫번째 태그 정규식
-    return html
-      .match(regexFirstTag)
-      ?.toString()
-      .split(" ")[0]
-      .replace("<", "")
-      .replace(">", "");
-  };
-
   // Row change event
   const onChangeContents = useCallback(
     (event: ContentEditableEvent) => {
       const regexAllTag = /<[^>]*>?/g; // html의 모든 태그 정규식
 
-      const currentHtmlvalue = event.target.value;
-      const type = getHTMLtagName(currentHtmlvalue);
-      const content = currentHtmlvalue.replace(regexAllTag, "");
+      const currentOriginValue = event.target.value;
       const cursor = document.getSelection();
       const offset = cursor?.anchorOffset;
-      /*
-        1. marked에서 &nbsp와 MD문법이 겹치면 인식을 못하기 때문에 제거
-        2. 인용 문법을 '>'에서 '|'로 변경
-      */
-      const parsedHtml = marked(
-        content.replace("&nbsp;", "").replace("|", ">"),
-        {
-          async: false,
-        }
-      );
 
-      if (type === "div") {
-        // 타입이 div일땐 초기화
-        setInnerHtml(undefined);
-      } else if (getHTMLtagName(parsedHtml) === "p") {
-        // 파싱된 HTML이 p 일땐 파싱 없이 저장
-        setInnerHtml(currentHtmlvalue);
-      } else if (content.includes("---")) {
-        // hr은 속성 없이 파싱
-        setInnerHtml(parsedHtml);
-      } else if (content.includes("```")) {
-        // code이면 속성 추가하여 파싱
-        setInnerHtml(addHTMLAttributes(parsedHtml));
-      } else if (/&nbsp;$/.test(content)) {
-        // 내용의 마지막이 "띄어쓰기"이면 속성 추가하여 파싱
-        setInnerHtml(addHTMLAttributes(parsedHtml));
+      // html tag 이름 가져오기, 괄호와 속성 제외
+      const getHTMLtagsName = (html: string) => {
+        const allTags = html.match(regexAllTag);
+        const headTags = allTags?.filter((tag) => !tag.includes("/"));
+        const headTagNames = headTags?.map((tag) =>
+          tag.replace("<", "").replace(">", "")
+        );
+        return headTagNames || [];
+      };
+
+      const parseToHtml = (value: string) => {
+        const mdToHtml = marked(value.replace("&nbsp;", "").replace("|", ">"), {
+          async: false,
+        }).replaceAll("\n", "");
+
+        return mdToHtml;
+      };
+
+      const content = currentOriginValue.replace(regexAllTag, "");
+      const htmlString = parseToHtml(currentOriginValue);
+      const tags = getHTMLtagsName(htmlString);
+
+      const typeTag = tags[0] || DEFAULT_TAG;
+
+      if (typeTag !== DEFAULT_TAG) setTag(typeTag);
+      if (tags.length > 1) {
+        setInnerHtml(htmlString);
+      } else if (tags.length === 1) {
       } else {
-        setInnerHtml(currentHtmlvalue);
+        setTag(DEFAULT_TAG);
+        setInnerHtml(undefined);
       }
 
       console.log({
-        tag: type,
-        content: currentHtmlvalue,
-        offset: offset,
+        type: tag,
+        origin: currentOriginValue,
+        tags: tags,
+        content: content,
+        parsed: htmlString,
       });
     },
-    [setInnerHtml]
+    [setInnerHtml, tag]
   );
 
   // Row 키입력 이벤트
@@ -169,21 +157,25 @@ const Row = ({ id, data, setData }: Props) => {
     }
   }, [addRow, deleteRow, id, keycode]);
 
-  const placeholderStyle = "content-[attr(placeholder)]";
-
   return (
-    <div className="w-full px-3">
-      <ContentEditable
-        html={innerHtml || ""}
-        onChange={onChangeContents}
-        onKeyDown={(e) => handleKeydown(e, id)}
-        placeholder={"글을 작성하거나 마크다운 텍스트를 입력하세요"}
-        className={tm(
-          `w-full space-y-2`,
-          innerHtml ? tm(TypographyClassname) : placeholderStyle
-        )}
-      />
-    </div>
+    <MarkdownContenteditable
+      autoFocus
+      tabIndex={0}
+      html={innerHtml}
+      tagName={tag}
+      onChange={onChangeContents}
+      // onKeyDown={(e) => handleKeydown(e, id)}
+    />
+    // <ContentEditable
+    //   html={innerHtml || ""}
+    //   onChange={onChangeContents}
+    //   onKeyDown={(e) => handleKeydown(e, id)}
+    //   placeholder={"글을 작성하거나 마크다운 텍스트를 입력하세요"}
+    //   className={cn(
+    //     "w-full px-3",
+    //     innerHtml ? ProseClassName : placeholderStyle
+    //   )}
+    // />
   );
 };
 

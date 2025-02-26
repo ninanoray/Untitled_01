@@ -1,8 +1,8 @@
 "use client";
 
-import * as React from "react";
+import { cn } from "@/src/lib/tailwindMerge";
 import * as SliderPrimitive from "@radix-ui/react-slider";
-import { tm } from "@/src/lib/tailwindMerge";
+import * as React from "react";
 
 const Slider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
@@ -10,7 +10,7 @@ const Slider = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SliderPrimitive.Root
     ref={ref}
-    className={tm(
+    className={cn(
       "relative flex w-full touch-none select-none items-center",
       className
     )}
