@@ -19,6 +19,14 @@ type Props = {
 const ADDROW = "Add";
 const DELETEROW = "DEL";
 
+export const TypographyClassname = [
+  "prose prose-sm dark:prose-invert max-w-none",
+  "prose-p:m-0 prose-p:p-0",
+  "prose-ul:m-0 prose-ol:m-0",
+  "prose-li:m-0 prose-li:p-0 prose-li:marker:text-foreground/80",
+  "prose-hr:mt-[0.9em] prose-hr:mb-[0.5em] prose-hr:border-foreground/50",
+];
+
 const Row = ({ id, data, setData }: Props) => {
   const innerHtml: string | undefined = data[id];
   const setInnerHtml = useCallback(
@@ -162,16 +170,6 @@ const Row = ({ id, data, setData }: Props) => {
   }, [addRow, deleteRow, id, keycode]);
 
   const placeholderStyle = "content-[attr(placeholder)]";
-  const hrStyle = "";
-  const ulStyle = "[&_ul]:list-disc marker:text-black";
-  const olStyle = "[&_ol]:list-decimal marker:text-black";
-  const liStyle = "[&_li]:ml-5";
-  const codeStyle =
-    "[&_pre]:w-full [&_pre]:min-h-[1em] [&_pre]:px-4 [&_pre]:py-3 [&_pre]:bg-stone-100 [&_code]:break-all [&_code]:whitespace-break-spaces";
-  const inlineCodeStyle =
-    "[&_code]:px-2 [&_code]:py-1 [&_code]:my-2 [&_code]:bg-stone-100 [&_code]:text-red-500 [&_code]:rounded-lg";
-  const blockquoteStyle =
-    "[&_blockquote]:w-full [&_blockquote]:min-h-[3em] [&_blockquote]:px-6 [&_blockquote]:py-3 [&_blockquote]:my-4 [&_blockquote]:bg-gray-50 [&_blockquote]:border-l-4 [&_blockquote]:border-gray-300 [&_blockquote]:text-lg [&_blockquote]:font-medium";
 
   return (
     <div className="w-full px-3">
@@ -182,9 +180,7 @@ const Row = ({ id, data, setData }: Props) => {
         placeholder={"글을 작성하거나 마크다운 텍스트를 입력하세요"}
         className={tm(
           `w-full space-y-2`,
-          innerHtml
-            ? tm(hrStyle, ulStyle, olStyle, liStyle, codeStyle, blockquoteStyle)
-            : placeholderStyle
+          innerHtml ? tm(TypographyClassname) : placeholderStyle
         )}
       />
     </div>

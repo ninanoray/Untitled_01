@@ -1,7 +1,9 @@
 "use client";
 
+import { TypographyClassname } from "@/src/components/row";
+import { Titlearea } from "@/src/components/titleArea";
 import { Textarea } from "@/src/components/ui/textarea";
-import { Titlearea } from "@/src/components/ui/titlearea";
+import { tm } from "@/src/lib/tailwindMerge";
 import { marked } from "marked";
 import { ElementType, useState } from "react";
 
@@ -50,7 +52,7 @@ const History = () => {
         dangerouslySetInnerHTML={{
           __html: result || "HTML로 파싱된 MD 출력",
         }}
-        className="w-full"
+        className={tm("w-full", TypographyClassname)}
       ></div>
       <Textarea
         value={textAreaValue}
