@@ -2,27 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-  .flex-center {
-    @apply flex items-center justify-center;
-  }
-  .screen {
-    @apply w-screen h-screen;
-  }
-  .mscreen {
-    @apply w-dvw h-dvh;
-  }
-  .trans-300 {
-    @apply transition-all duration-300;
-  }
-  .trans-200 {
-    @apply transition-all duration-200;
-  }
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -97,7 +76,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border outline-ring/50;
   }
   *[contenteditable] {
     @apply inline-block cursor-text caret-black focus:outline-none empty:after:content-[attr(placeholder)] empty:block empty:text-gray-300;
@@ -109,24 +88,24 @@
     @apply bg-background text-foreground;
   }
   h1 {
-    @apply text-3xl font-bold text-gray-950;
+    @apply text-3xl font-bold text-foreground;
   }
   h2 {
-    @apply text-2xl font-semibold text-gray-900;
+    @apply text-2xl font-semibold text-foreground;
   }
   h3 {
-    @apply text-xl font-medium text-gray-800;
+    @apply text-xl font-medium text-foreground;
   }
   h4 {
-    @apply text-lg font-normal text-gray-800;
+    @apply text-lg font-normal text-foreground;
   }
   p {
-    @apply text-base font-normal text-gray-800;
+    @apply text-base font-normal text-foreground/80;
   }
   h5 {
-    @apply text-sm font-light text-gray-700;
+    @apply text-sm font-light text-foreground/70;
   }
   h6 {
-    @apply text-xs font-light text-gray-600;
+    @apply text-xs font-light text-foreground/60;
   }
 }

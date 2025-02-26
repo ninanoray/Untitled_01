@@ -1,9 +1,9 @@
 import type { Config } from "tailwindcss";
-import * as animate from "tailwindcss-animate";
 
-const myColors = { myred: "#B72621" } as const;
-
-export type Colors = typeof myColors;
+import container from "@tailwindcss/container-queries";
+import typography from "@tailwindcss/typography";
+import animate from "tailwindcss-animate";
+import plugin from "tailwindcss/plugin";
 
 export default {
   darkMode: ["class"],
@@ -14,7 +14,6 @@ export default {
   ],
   theme: {
     extend: {
-      myColors,
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
@@ -67,6 +66,11 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
+      containers: {
+        xn: "10rem",
+        nn: "12rem",
+        "2xs": "14rem",
+      },
       keyframes: {
         "caret-blink": {
           "0%,70%,100%": { opacity: "1" },
@@ -83,5 +87,63 @@ export default {
       },
     },
   },
-  plugins: [animate],
+  plugins: [
+    animate,
+    typography,
+    container,
+    plugin(({ addUtilities, addComponents }) => {
+      addComponents({
+        ".bg-layout": {
+          "@apply size-full max-w-full max-h-full p-3 flex flex-col": {},
+        },
+      });
+      addUtilities({
+        ".text-balance": {
+          "text-wrap": "balance",
+        },
+        ".text-justify": {
+          width: "100%",
+          "text-align": "justify",
+          "text-align-last": "justify",
+        },
+        ".flex-center": {
+          "@apply flex items-center justify-center": {},
+        },
+        ".screen": {
+          "@apply w-screen h-screen": {},
+        },
+        ".mscreen": {
+          "@apply w-dvw min-h-dvh": {},
+        },
+        ".trans-300": {
+          "@apply transition-all duration-300": {},
+        },
+        ".trans-200": {
+          "@apply transition-all duration-200": {},
+        },
+        ".trans-100": {
+          "@apply transition-all duration-100": {},
+        },
+        ".drag-none": {
+          "-webkit-user-drag": "none",
+          "-khtml-user-drag": "none",
+          "-moz-user-drag": "none",
+          "-o-user-drag": "none",
+          "user-drag": "none",
+        },
+        ".mobile": {
+          "-webkit-touch-callout": "none",
+          "-webkit-user-select": "none",
+          "-webkit-tap-highlight-color": "rgba(0, 0, 0, 0)",
+          "touch-callout": "none",
+          "user-select": "none",
+          "tap-highlight-color": "rgba(0, 0, 0, 0)",
+        },
+        ".text-2xs": {
+          "font-size": "0.6rem",
+          "line-height": "0.85rem",
+        },
+      });
+    }),
+  ],
 } satisfies Config;

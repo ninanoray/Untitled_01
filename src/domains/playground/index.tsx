@@ -1,8 +1,8 @@
 "use client";
 
+import Row from "@/src/components/row";
+import { Titlearea } from "@/src/components/ui/titlearea";
 import { useState } from "react";
-import Row from "../row";
-import { Titlearea } from "../ui/titlearea";
 
 const Playground = () => {
   const [rows, setRows] = useState<(string | undefined)[]>([undefined]);

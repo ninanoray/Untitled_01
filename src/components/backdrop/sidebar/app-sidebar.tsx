@@ -6,6 +6,7 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/src/components/ui/sidebar";
+import { useDataStore } from "@/src/stores/storeProvider";
 import {
   AudioWaveform,
   BookOpen,
@@ -18,7 +19,6 @@ import * as React from "react";
 import { NavPages } from "./navPages";
 import { NavUser } from "./navUser";
 import { NavWorkSpace } from "./navWorkspace";
-import { useDataStore } from "@/src/stores/storeProvider";
 
 const data = {
   workspaces: [

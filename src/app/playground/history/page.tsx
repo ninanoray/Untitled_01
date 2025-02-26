@@ -1,5 +1,5 @@
 import Header from "@/src/components/backdrop/header";
-import History from "@/src/components/playground/history";
+import History from "@/src/domains/playground/history";
 
 const breadcrumbs = {
   title: "History",

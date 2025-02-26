@@ -1,6 +1,9 @@
 "use client";
 
-import React, {
+import { useIsMobile } from "@/src/hooks/use-mobile";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { CropIcon, Trash2Icon } from "lucide-react";
+import {
   Dispatch,
   ReactNode,
   SetStateAction,
@@ -17,18 +20,14 @@ import ReactCrop, {
   type PixelCrop,
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { CropIcon, Trash2Icon } from "lucide-react";
+import { Button } from "../ui/button";
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogFooter,
-  DialogHeader,
   DialogTrigger,
 } from "../ui/dialog";
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
-import { Button } from "../ui/button";
-import { useIsMobile } from "@/src/hooks/use-mobile";
 
 interface Props {
   image: string;
@@ -117,6 +116,26 @@ const ImageCrop = ({ image, setImage, aspect, children }: Props) => {
     setImage(url);
     setDialogOpen(false);
   }
+
+  const dataURLtoBlob = (dataUrl: string) => {
+    const arr = dataUrl.split(",");
+
+    const mimeMatch = arr[0].match(/:(.*?);/);
+    if (!mimeMatch || mimeMatch.length < 2) {
+      throw new Error("Invalid data URL");
+    }
+
+    const mime = mimeMatch[1];
+    const bstr = atob(arr[1]);
+    const n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    for (let i = 0; i < n; i++) {
+      u8arr[i] = bstr.charCodeAt(i);
+    }
+
+    return new Blob([u8arr], { type: mime });
+  };
 
   // 초기화
   useEffect(() => {

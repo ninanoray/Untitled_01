@@ -1,5 +1,5 @@
 import Header from "@/src/components/backdrop/header";
-import Playground from "@/src/components/playground";
+import Playground from "@/src/domains/playground";
 
 const breadcrumbs = {
   title: "Playground",

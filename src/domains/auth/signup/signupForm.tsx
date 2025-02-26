@@ -13,8 +13,8 @@ import {
   FormMessage,
 } from "../../ui/form";
 import { Input } from "../../ui/input";
-import { signupFormSchema } from "./signupFormSchema";
 import InputImage from "./inputImage";
+import { signupFormSchema } from "./signupFormSchema";
 
 const SignupForm = () => {
   const [image, setImage] = useState<string>("");
@@ -31,7 +31,7 @@ const SignupForm = () => {
 
   function onSubmit(values: z.infer<typeof signupFormSchema>) {
     console.log(values);
-    router.push("/");
+    // router.push("/");
   }
 
   return (

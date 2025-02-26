@@ -1,11 +1,6 @@
-import {
-  ChangeEvent,
-  Dispatch,
-  FormEvent,
-  SetStateAction,
-  useState,
-} from "react";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { Control } from "react-hook-form";
+import ImageCrop from "../../imageCrop";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import {
   FormControl,
@@ -15,7 +10,6 @@ import {
   FormMessage,
 } from "../../ui/form";
 import { Input } from "../../ui/input";
-import ImageCrop from "../../imageCrop";
 
 type Props = {
   control:
@@ -32,15 +26,15 @@ type Props = {
 const InputImage = ({ control, image, setImage }: Props) => {
   function getImageData(event: ChangeEvent<HTMLInputElement>) {
     const dataTransfer = new DataTransfer();
-    const files = dataTransfer.files;
 
-    let displayUrl = "";
-    const fileList = event.target.files;
-    if (fileList && fileList.length > 0) {
-      // Add newly uploaded images
-      Array.from(fileList).forEach((image) => dataTransfer.items.add(image));
-      displayUrl = URL.createObjectURL(fileList[0]);
-    }
+    // Add newly uploaded images
+    Array.from(event.target.files!).forEach((image) =>
+      dataTransfer.items.add(image)
+    );
+
+    const files = dataTransfer.files;
+    const displayUrl = URL.createObjectURL(event.target.files![0]);
+
     return { files, displayUrl };
   }
 

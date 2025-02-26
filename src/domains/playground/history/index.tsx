@@ -1,9 +1,9 @@
 "use client";
 
+import { Textarea } from "@/src/components/ui/textarea";
+import { Titlearea } from "@/src/components/ui/titlearea";
 import { marked } from "marked";
 import { ElementType, useState } from "react";
-import { Textarea } from "../../ui/textarea";
-import { Titlearea } from "../../ui/titlearea";
 
 const History = () => {
   const [textAreaValue, setTextAreaValue] = useState<string>();
