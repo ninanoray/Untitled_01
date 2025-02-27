@@ -60,7 +60,7 @@ const Row = ({ id, data, setData }: Props) => {
         return headTagNames || [];
       };
 
-      const parseToHtml = (value: string) => {
+      const parseToHtml = (value: string, exceptTags = []) => {
         const mdToHtml = marked(value.replace("&nbsp;", "").replace("|", ">"), {
           async: false,
         }).replaceAll("\n", "");
@@ -74,10 +74,18 @@ const Row = ({ id, data, setData }: Props) => {
 
       const typeTag = tags[0] || DEFAULT_TAG;
 
-      if (typeTag !== DEFAULT_TAG) setTag(typeTag);
       if (tags.length > 1) {
-        setInnerHtml(htmlString);
+        if (tag === DEFAULT_TAG) setTag(typeTag);
+        setInnerHtml(
+          addHTMLAttributes(htmlString.replace(/<(\/?)(ul|ol|pre|p)>/gi, ""))
+        );
       } else if (tags.length === 1) {
+        if (tag === DEFAULT_TAG) {
+          setTag(typeTag);
+        } else {
+          if (["ul", "ol", "pre"].includes(tag)) setInnerHtml(htmlString);
+          else setInnerHtml(content);
+        }
       } else {
         setTag(DEFAULT_TAG);
         setInnerHtml(undefined);
@@ -88,7 +96,6 @@ const Row = ({ id, data, setData }: Props) => {
         origin: currentOriginValue,
         tags: tags,
         content: content,
-        parsed: htmlString,
       });
     },
     [setInnerHtml, tag]
@@ -166,16 +173,6 @@ const Row = ({ id, data, setData }: Props) => {
       onChange={onChangeContents}
       // onKeyDown={(e) => handleKeydown(e, id)}
     />
-    // <ContentEditable
-    //   html={innerHtml || ""}
-    //   onChange={onChangeContents}
-    //   onKeyDown={(e) => handleKeydown(e, id)}
-    //   placeholder={"글을 작성하거나 마크다운 텍스트를 입력하세요"}
-    //   className={cn(
-    //     "w-full px-3",
-    //     innerHtml ? ProseClassName : placeholderStyle
-    //   )}
-    // />
   );
 };
 
