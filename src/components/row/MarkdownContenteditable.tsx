@@ -36,7 +36,7 @@ const MarkdownContenteditable = forwardRef<
           html={html}
           tagName={tagName}
           placeholder={placeholder}
-          className={cn(html || placeholderStyle)}
+          className={cn(className || placeholderStyle)}
           {...props}
         />
       </div>
@@ -54,5 +54,5 @@ export const ProseClassName = [
   "prose-ul:m-0 prose-ol:m-0",
   "prose-li:m-0 prose-li:p-0 prose-li:marker:text-foreground/80",
   "prose-hr:mt-[0.9em] prose-hr:mb-[0.5em] prose-hr:border-foreground/50",
-  "prose-pre:w-full",
+  "prose-pre:w-full prose-code:caret-white",
 ];

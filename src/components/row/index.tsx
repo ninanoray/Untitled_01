@@ -60,12 +60,11 @@ const Row = ({ id, data, setData }: Props) => {
         return headTagNames || [];
       };
 
-      const parseToHtml = (value: string, exceptTags = []) => {
+      const parseToHtml = (value: string) => {
         const mdToHtml = marked(value.replace("&nbsp;", "").replace("|", ">"), {
           async: false,
-        }).replaceAll("\n", "");
-
-        return mdToHtml;
+        });
+        return mdToHtml.replaceAll("\n", "");
       };
 
       const content = currentOriginValue.replace(regexAllTag, "");
@@ -76,9 +75,15 @@ const Row = ({ id, data, setData }: Props) => {
 
       if (tags.length > 1) {
         if (tag === DEFAULT_TAG) setTag(typeTag);
-        setInnerHtml(
-          addHTMLAttributes(htmlString.replace(/<(\/?)(ul|ol|pre|p)>/gi, ""))
-        );
+        // pre 태그 감지
+        if (tags.includes("pre"))
+          setInnerHtml(
+            addHTMLAttributes(htmlString.replace(/<(\/?)(pre)>/gi, ""))
+          );
+        // type이 "pre" 일때
+        else if (tag === "pre")
+          addHTMLAttributes(htmlString.replace(/<(\/?)(p)>/gi, ""));
+        else setInnerHtml(htmlString.replace(/<(\/?)(ul|ol)>/gi, ""));
       } else if (tags.length === 1) {
         if (tag === DEFAULT_TAG) {
           setTag(typeTag);
